@@ -2,36 +2,32 @@ package com.dylankilbride.grouppay.controllers;
 
 import com.dylankilbride.grouppay.entities.Users;
 import com.dylankilbride.grouppay.repositories.UsersRepository;
-import netscape.javascript.JSObject;
+import com.dylankilbride.grouppay.services.LoginService;
+import com.dylankilbride.grouppay.services.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/")
 public class UserController {
 
-
 	@Autowired
 	UsersRepository usersRepository;
+	@Autowired
+	RegistrationService registrationService;
+	@Autowired
+	LoginService loginService;
 
-	@GetMapping(value = "/all")
-	public List<Users> getAll() {
-		return usersRepository.findAll();
+	@RequestMapping(value = "/register", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = "application/json")
+	public String registerNewUser(final Map<String, String> details) {
+		return registrationService.checkIfUserAlreadyExists(details);
 	}
 
-	@RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
-	public List<Users> registerNewUser(@RequestBody final Users user) { //Change return type to JSON message
-		//TODO Add method call to check if user is valid
-		//TODO Add method to check if user already exists in DB
-		if (usersRepository.existsByEmailAddress(user.getEmailAddress()) == true) {
-			return usersRepository.findAll();
-		} else {
-			usersRepository.save(user);
-			return usersRepository.findAll();
-		}
+	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = "application/json")
+	public String existingUserLogin(final Map<String, String> loginDetails) {
+		return loginService.validateUser(loginDetails);
 	}
 }

@@ -39,5 +39,11 @@ additional functionality as of now.
 
 **Use:** `@Service
          public class LoginService {}`
+         
 
+`@RequestBody`
 
+**Meaning:** @RequestBody annotation maps the HttpRequest body to a transfer or domain object, enabling auto
+deserialization of the inbound HttpRequest body onto a Java object.
+
+**Use:** `public String LoginService(@RequestBody Users user) {}`

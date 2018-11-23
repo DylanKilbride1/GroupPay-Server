@@ -3,8 +3,6 @@ package com.dylankilbride.grouppay.entities;
 import javax.persistence.*;
 
 @Table(name = "Users", schema = "grouppay")
-@NamedQuery(name = "Users.checkIfUserAlreadyExists",
-				query = "SELECT user FROM Users user WHERE user.emailAddress = : email")
 
 @Entity
 public class Users {
