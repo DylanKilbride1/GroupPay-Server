@@ -10,7 +10,7 @@ public class CardDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "card_id")
-	private int cardId;
+	private long cardId;
 	@Column(name = "card_number")
 	private String cardNumber;
 	@Column(name = "expiry_date")
@@ -28,11 +28,11 @@ public class CardDetails {
 		//Empty Constructor
 	}
 
-	public int getCardId() {
+	public long getCardId() {
 		return cardId;
 	}
 
-	public void setCardId(int cardId) {
+	public void setCardId(long cardId) {
 		this.cardId = cardId;
 	}
 

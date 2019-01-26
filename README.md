@@ -13,7 +13,7 @@
 should be expecting in the URL path.
 
 **Use:** `@RequestMapping(value = "/login/{email}")
-      	public String returnLoginDetails(@PathVariable("email"))`
+          public String returnLoginDetails(@PathVariable("email"))`
 
 
 `@RestController`
@@ -29,7 +29,7 @@ should be expecting in the URL path.
  pull it into the application context
 
 **Use** `@Component
-public class LoginService {}`
+         public class LoginService {}`
 
 
 `@Service`
@@ -38,7 +38,7 @@ public class LoginService {}`
 additional functionality as of now.
 
 **Use:** `@Service
-         public class LoginService {}`
+           public class LoginService {}`
          
 
 `@RequestBody`
@@ -47,3 +47,15 @@ additional functionality as of now.
 deserialization of the inbound HttpRequest body onto a Java object.
 
 **Use:** `public String LoginService(@RequestBody Users user) {}`
+
+
+`@ResponseBody`
+
+**Meaning:** @ResponseBody returns the return object in the body of the response.
+
+**Use:** `@ResponseBody 
+           public User LoginService() {
+           //User will be returned in the body of the response
+           }`
+           
+           

@@ -10,7 +10,7 @@ public class Users {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "userId")
-	private int id;
+	private long id;
 	private String firstName;
 	private String lastName;
 	private String emailAddress;
@@ -26,6 +26,10 @@ public class Users {
 	}
 
 	public Users() {
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public void setFirstName(String firstName) {
@@ -46,6 +50,10 @@ public class Users {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public String getFirstName() {
