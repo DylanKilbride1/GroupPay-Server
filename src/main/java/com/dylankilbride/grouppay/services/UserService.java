@@ -39,7 +39,6 @@ public class UserService {
 			resultMap.put("result", "1");
 			resultMap.put("userId", Long.toString(user.getId()));
 			resultMap.put("name", user.getFirstName() + " " + user.getLastName());
-			System.out.println(user.getId() + " Im being called :(");
 			return resultMap;
 		} else {
 			resultMap.put("result", "0");
@@ -62,6 +61,31 @@ public class UserService {
 		long id = Long.valueOf(uid);
 		Users foundUser = usersRepository.findUsersById(id);
 		foundUser.setEmailAddress(user.getEmailAddress());
+		usersRepository.save(foundUser);
+		return new UsersProfileDetails(user.getId(),
+						user.getFirstName(),
+						user.getLastName(),
+						user.getEmailAddress(),
+						user.getMobileNumber());
+	}
+
+	public UsersProfileDetails updateUsersMobileNumber(String uid, Users user) {
+		long id = Long.valueOf(uid);
+		Users foundUser = usersRepository.findUsersById(id);
+		foundUser.setMobileNumber(user.getMobileNumber());
+		usersRepository.save(foundUser);
+		return new UsersProfileDetails(user.getId(),
+						user.getFirstName(),
+						user.getLastName(),
+						user.getEmailAddress(),
+						user.getMobileNumber());
+	}
+
+	public UsersProfileDetails updateUsersFullName(String uid, Users user) {
+		long id = Long.valueOf(uid);
+		Users foundUser = usersRepository.findUsersById(id);
+		foundUser.setFirstName(user.getFirstName());
+		foundUser.setLastName(user.getLastName());
 		usersRepository.save(foundUser);
 		return new UsersProfileDetails(user.getId(),
 						user.getFirstName(),

@@ -50,4 +50,20 @@ public class UserController {
 	public UsersProfileDetails updateUserEmail(@PathVariable("userId") String userId, @RequestBody Users user){
 		return userService.updateUsersEmail(userId, user);
 	}
+
+	@RequestMapping(value = "/user/updateMobileNumber/{userId}",
+					method = RequestMethod.PATCH,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public UsersProfileDetails updateUserMobileNumber(@PathVariable("userId") String userId, @RequestBody Users user){
+		return userService.updateUsersMobileNumber(userId, user);
+	}
+
+	@RequestMapping(value = "/user/updateFullName/{userId}",
+					method = RequestMethod.PATCH,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public UsersProfileDetails updateUserFullName(@PathVariable("userId") String userId, @RequestBody Users user){
+		return userService.updateUsersFullName(userId, user);
+	}
 }
