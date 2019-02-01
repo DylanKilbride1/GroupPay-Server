@@ -28,11 +28,11 @@ public class User {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "profile_image")
 	private ProfileImage profileImage;
 
-	@OneToMany(fetch = FetchType.LAZY,
+	@OneToMany(fetch = FetchType.EAGER,
 	cascade = CascadeType.ALL,
 	mappedBy = "user")
 	private Set<Transaction> transaction;

@@ -30,7 +30,7 @@ public class GroupAccount {
 	@OneToMany(mappedBy = "groupAccount")
 	private Set<Transaction> transaction;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
 
