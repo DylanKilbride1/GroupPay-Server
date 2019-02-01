@@ -1,7 +1,7 @@
 package com.dylankilbride.grouppay.services;
 
-import com.dylankilbride.grouppay.entities.Users;
-import com.dylankilbride.grouppay.repositories.UsersRepository;
+import com.dylankilbride.grouppay.models.User;
+import com.dylankilbride.grouppay.repositories.UserRepository;
 import com.dylankilbride.grouppay.returnobjects.UsersProfileDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,15 +13,15 @@ import java.util.Map;
 public class UserService {
 
 	@Autowired
-	private UsersRepository usersRepository;
+	private UserRepository userRepository;
 
 	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) { //Should I be returning response status?
 		Map<String, String> resultMap = new HashMap<>();
-		if (usersRepository.existsByEmailAddress(user.get("email_address"))) {
+		if (userRepository.existsByEmailAddress(user.get("email_address"))) {
 			resultMap.put("result", "error");
 			return resultMap;
 		} else {
-			usersRepository.save(new Users(user.get("first_name"),
+			userRepository.save(new User(user.get("first_name"),
 							user.get("last_name"),
 							user.get("email_address"),
 							user.get("password"),
@@ -33,9 +33,9 @@ public class UserService {
 
 	public Map<String, String> validateUser(Map<String, String> loginDetails) {
 		Map<String, String> resultMap = new HashMap<>();
-		if (usersRepository.existsByEmailAddress(loginDetails.get("email"))
-						&& usersRepository.existsByPassword(loginDetails.get("password"))) {
-			Users user = usersRepository.findUsersByEmailAddress(loginDetails.get("email"));
+		if (userRepository.existsByEmailAddress(loginDetails.get("email"))
+						&& userRepository.existsByPassword(loginDetails.get("password"))) {
+			User user = userRepository.findUsersByEmailAddress(loginDetails.get("email"));
 			resultMap.put("result", "1");
 			resultMap.put("userId", Long.toString(user.getId()));
 			resultMap.put("name", user.getFirstName() + " " + user.getLastName());
@@ -48,7 +48,7 @@ public class UserService {
 
 	public UsersProfileDetails getUserDetails(String uid) {
 		long id = Long.valueOf(uid);
-		Users user = usersRepository.findUsersById(id);
+		User user = userRepository.findUsersById(id);
 		UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
@@ -57,11 +57,11 @@ public class UserService {
 		return returnUser;
 	}
 
-	public UsersProfileDetails updateUsersEmail(String uid, Users user) {
+	public UsersProfileDetails updateUsersEmail(String uid, User user) {
 		long id = Long.valueOf(uid);
-		Users foundUser = usersRepository.findUsersById(id);
+		User foundUser = userRepository.findUsersById(id);
 		foundUser.setEmailAddress(user.getEmailAddress());
-		usersRepository.save(foundUser);
+		userRepository.save(foundUser);
 		return new UsersProfileDetails(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
@@ -69,11 +69,11 @@ public class UserService {
 						user.getMobileNumber());
 	}
 
-	public UsersProfileDetails updateUsersMobileNumber(String uid, Users user) {
+	public UsersProfileDetails updateUsersMobileNumber(String uid, User user) {
 		long id = Long.valueOf(uid);
-		Users foundUser = usersRepository.findUsersById(id);
+		User foundUser = userRepository.findUsersById(id);
 		foundUser.setMobileNumber(user.getMobileNumber());
-		usersRepository.save(foundUser);
+		userRepository.save(foundUser);
 		return new UsersProfileDetails(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
@@ -81,12 +81,12 @@ public class UserService {
 						user.getMobileNumber());
 	}
 
-	public UsersProfileDetails updateUsersFullName(String uid, Users user) {
+	public UsersProfileDetails updateUsersFullName(String uid, User user) {
 		long id = Long.valueOf(uid);
-		Users foundUser = usersRepository.findUsersById(id);
+		User foundUser = userRepository.findUsersById(id);
 		foundUser.setFirstName(user.getFirstName());
 		foundUser.setLastName(user.getLastName());
-		usersRepository.save(foundUser);
+		userRepository.save(foundUser);
 		return new UsersProfileDetails(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),

@@ -1,14 +1,14 @@
-package com.dylankilbride.grouppay.entities;
+package com.dylankilbride.grouppay.models;
 
 import javax.persistence.*;
 
 @Table(name = "CardDetails", schema = "grouppay")
 
-//TODO @Entity
+@Entity
 public class CardDetails {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "card_id")
 	private long cardId;
 	@Column(name = "card_number")

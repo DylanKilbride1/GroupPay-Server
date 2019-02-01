@@ -1,7 +1,7 @@
 package com.dylankilbride.grouppay.controllers;
 
-import com.dylankilbride.grouppay.entities.Users;
-import com.dylankilbride.grouppay.repositories.UsersRepository;
+import com.dylankilbride.grouppay.models.User;
+import com.dylankilbride.grouppay.repositories.UserRepository;
 import com.dylankilbride.grouppay.returnobjects.UsersProfileDetails;
 import com.dylankilbride.grouppay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class UserController {
 
 	@Autowired
-	UsersRepository usersRepository;
+	UserRepository userRepository;
 	@Autowired
 	UserService userService;
 
@@ -47,7 +47,7 @@ public class UserController {
 					method = RequestMethod.PATCH,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public UsersProfileDetails updateUserEmail(@PathVariable("userId") String userId, @RequestBody Users user){
+	public UsersProfileDetails updateUserEmail(@PathVariable("userId") String userId, @RequestBody User user){
 		return userService.updateUsersEmail(userId, user);
 	}
 
@@ -55,7 +55,7 @@ public class UserController {
 					method = RequestMethod.PATCH,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public UsersProfileDetails updateUserMobileNumber(@PathVariable("userId") String userId, @RequestBody Users user){
+	public UsersProfileDetails updateUserMobileNumber(@PathVariable("userId") String userId, @RequestBody User user){
 		return userService.updateUsersMobileNumber(userId, user);
 	}
 
@@ -63,7 +63,7 @@ public class UserController {
 					method = RequestMethod.PATCH,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public UsersProfileDetails updateUserFullName(@PathVariable("userId") String userId, @RequestBody Users user){
+	public UsersProfileDetails updateUserFullName(@PathVariable("userId") String userId, @RequestBody User user){
 		return userService.updateUsersFullName(userId, user);
 	}
 }

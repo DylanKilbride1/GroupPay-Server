@@ -1,23 +1,47 @@
-package com.dylankilbride.grouppay.entities;
+package com.dylankilbride.grouppay.models;
 
 import javax.persistence.*;
+import java.util.Set;
 
-@Table(name = "Users", schema = "grouppay")
+@Table(name = "User", schema = "grouppay")
 
 @Entity
-public class Users {
+public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "userId")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name = "user_id")
 	private long id;
+
+	@Column(name = "first_name")
 	private String firstName;
+
+	@Column(name = "last_name")
 	private String lastName;
+
+	@Column(name = "email_address")
 	private String emailAddress;
+
+	@Column(name = "password")
 	private String password;
+
+	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	public Users(String firstName, String lastName, String emailAddress, String password, String mobileNumber) {
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "profile_image")
+	private ProfileImage profileImage;
+
+	@OneToMany(fetch = FetchType.LAZY,
+	cascade = CascadeType.ALL,
+	mappedBy = "user")
+	private Set<Transaction> transaction;
+
+	@ManyToMany(mappedBy="groupMembers")
+	private Set<GroupAccount> groupAccounts;
+
+
+	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
@@ -25,7 +49,7 @@ public class Users {
 		this.mobileNumber = mobileNumber;
 	}
 
-	public Users() {
+	public User() {
 	}
 
 	public void setId(long id) {
