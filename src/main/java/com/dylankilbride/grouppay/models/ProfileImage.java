@@ -13,7 +13,7 @@ public class ProfileImage {
 	@Column(name = "profile_image_location")
 	private String profileImageLocation;
 
-	@OneToOne(fetch = FetchType.LAZY,
+	@OneToOne(fetch = FetchType.EAGER,
 					cascade = CascadeType.ALL,
 					mappedBy = "profileImage")
 	private User user;

@@ -13,7 +13,7 @@ public class GroupImage {
 	@Column(name = "group_image_location")
 	private String groupImageLocation;
 
-	@OneToOne(fetch = FetchType.LAZY,
+	@OneToOne(fetch = FetchType.EAGER,
 					cascade =  CascadeType.ALL,
 					mappedBy = "groupImage")
 	private GroupAccount groupAccount;
