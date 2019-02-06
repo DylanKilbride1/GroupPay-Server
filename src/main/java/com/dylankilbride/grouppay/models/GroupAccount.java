@@ -121,6 +121,10 @@ public class GroupAccount {
 
 	public void addUserToGroupParticipants(User user){
 		groupMembers.add(user);
+		incrementGroupMembers();
+	}
+
+	public void incrementGroupMembers() {
 		numberOfMembers++;
 	}
 }
