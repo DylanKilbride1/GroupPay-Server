@@ -10,7 +10,7 @@ public class GroupAccount {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name = "account_id")
+	@Column(name = "accountId")
 	private long groupAccountId;
 
 	@Column(name = "group_admin_id")
@@ -61,6 +61,14 @@ public class GroupAccount {
 		this.accountName = accountName;
 		this.accountDescription = accountDescription;
 		this.totalAmountOwed = totalAmountOwed;
+	}
+
+	public long getGroupAccountId() {
+		return groupAccountId;
+	}
+
+	public void setGroupAccountId(long groupAccountId) {
+		this.groupAccountId = groupAccountId;
 	}
 
 	public long getAdminId() {
@@ -120,7 +128,7 @@ public class GroupAccount {
 	}
 
 	public void addUserToGroupParticipants(User user){
-		groupMembers.add(user);
+		groupMembers.add(user); //TODO This returns false but increments set size.. Why are users not being reflected in DB?
 		incrementGroupMembers();
 	}
 

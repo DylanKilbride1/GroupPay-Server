@@ -9,4 +9,5 @@ public interface UserRepository extends CrudRepository<User, Integer> { //JPA or
 	boolean existsByPassword(String password);
 	User findUsersByEmailAddress(String emailAddress);
 	User findUsersById(long id);
+	User findUsersByMobileNumber(String mobileNumber);
 }

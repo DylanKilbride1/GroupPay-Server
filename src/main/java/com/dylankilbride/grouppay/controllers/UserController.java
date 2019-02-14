@@ -47,7 +47,8 @@ public class UserController {
 					method = RequestMethod.PATCH,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public UsersProfileDetails updateUserEmail(@PathVariable("userId") String userId, @RequestBody User user){
+	public UsersProfileDetails updateUserEmail(@PathVariable("userId") String userId,
+	                                           @RequestBody User user){
 		return userService.updateUsersEmail(userId, user);
 	}
 
@@ -55,7 +56,8 @@ public class UserController {
 					method = RequestMethod.PATCH,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public UsersProfileDetails updateUserMobileNumber(@PathVariable("userId") String userId, @RequestBody User user){
+	public UsersProfileDetails updateUserMobileNumber(@PathVariable("userId") String userId,
+	                                                  @RequestBody User user){
 		return userService.updateUsersMobileNumber(userId, user);
 	}
 
@@ -63,7 +65,8 @@ public class UserController {
 					method = RequestMethod.PATCH,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public UsersProfileDetails updateUserFullName(@PathVariable("userId") String userId, @RequestBody User user){
+	public UsersProfileDetails updateUserFullName(@PathVariable("userId") String userId,
+	                                              @RequestBody User user){
 		return userService.updateUsersFullName(userId, user);
 	}
 }

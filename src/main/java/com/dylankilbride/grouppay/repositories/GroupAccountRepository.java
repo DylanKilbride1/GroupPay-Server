@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface GroupAccountRepository extends CrudRepository<GroupAccount, Integer> {
 
-
+ GroupAccount findByGroupAccountId(long accountId);
 }

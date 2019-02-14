@@ -10,4 +10,4 @@
 - PATCH Can accept just the fields to be updated. This will replace just the column in the request
 
 **GSON**
-- When sending JSON Requests, if a key has a NULL value, it wont inlclude that key/value pair in the body
+- When sending JSON Requests, if a key has a NULL value, it wont include that key/value pair in the body
