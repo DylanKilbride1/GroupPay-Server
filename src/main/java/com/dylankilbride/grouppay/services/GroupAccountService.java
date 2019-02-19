@@ -38,6 +38,4 @@ public class GroupAccountService {
 	public GroupAccount getDetailedGroupAccountInfo(long groupAccountId) {
 		return groupAccountRepository.findByGroupAccountId(groupAccountId);
 	}
-
-
 }
