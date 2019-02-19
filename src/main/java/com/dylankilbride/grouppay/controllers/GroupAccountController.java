@@ -37,8 +37,7 @@ public class GroupAccountController {
 
 	@RequestMapping(value = "/getDetailedGroupInfo/{groupAccountId}",
 					method = RequestMethod.GET,
-					produces = MediaType.APPLICATION_JSON_VALUE,
-					consumes = MediaType.APPLICATION_JSON_VALUE)
+					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public GroupAccount getDetailedGroupInfo(@PathVariable(name = "groupAccountId") long groupAccountId) {
 		return groupAccountService.getDetailedGroupAccountInfo(groupAccountId);
