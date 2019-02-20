@@ -2,7 +2,9 @@ package com.dylankilbride.grouppay.models;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,11 +40,11 @@ public class GroupAccount {
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "groupAccount_users",
 					joinColumns = {@JoinColumn(name = "groupAccount_id")},
 					inverseJoinColumns = {@JoinColumn(name = "user_id")})
-	private Set<User> groupMembers = new HashSet<>();
+	private List<User> groupMembers = new ArrayList<>();
 
 	public GroupAccount(long adminId, String accountName, String accountDescription, BigDecimal totalAmountOwed, BigDecimal totalAmountPaid) {
 		this.adminId = adminId;
@@ -134,5 +136,9 @@ public class GroupAccount {
 
 	public void incrementGroupMembers() {
 		numberOfMembers++;
+	}
+
+	public List<User> getGroupMembers(){
+		return groupMembers;
 	}
 }
