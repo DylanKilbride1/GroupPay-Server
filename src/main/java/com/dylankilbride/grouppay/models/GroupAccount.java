@@ -40,12 +40,6 @@ public class GroupAccount {
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
 
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "groupAccount_users",
-					joinColumns = {@JoinColumn(name = "groupAccount_id")},
-					inverseJoinColumns = {@JoinColumn(name = "user_id")})
-	private List<User> groupMembers = new ArrayList<>();
-
 	public GroupAccount(long adminId, String accountName, String accountDescription, BigDecimal totalAmountOwed, BigDecimal totalAmountPaid) {
 		this.adminId = adminId;
 		this.accountName = accountName;
@@ -129,16 +123,12 @@ public class GroupAccount {
 		this.groupImage = groupImage;
 	}
 
-	public void addUserToGroupParticipants(User user){
-		groupMembers.add(user); //TODO This returns false but increments set size.. Why are users not being reflected in DB?
-		incrementGroupMembers();
-	}
+//	public void addUserToGroupParticipants(User user){
+//		groupMembers.add(user); //TODO This returns false but increments set size.. Why are users not being reflected in DB?
+//		incrementGroupMembers();
+//	}
 
 	public void incrementGroupMembers() {
 		numberOfMembers++;
-	}
-
-	public List<User> getGroupMembers(){
-		return groupMembers;
 	}
 }

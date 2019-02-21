@@ -1,5 +1,7 @@
 package com.dylankilbride.grouppay.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,8 +42,10 @@ public class User {
 	mappedBy = "user")
 	private Set<Transaction> transaction;
 
-	@ManyToMany(mappedBy="groupMembers",
-							fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "groupAccount_users",
+					joinColumns = {@JoinColumn(name = "groupAccount_id")},
+					inverseJoinColumns = {@JoinColumn(name = "user_id")})
 	private List<GroupAccount> groupAccounts = new ArrayList<>();
 
 	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber) {

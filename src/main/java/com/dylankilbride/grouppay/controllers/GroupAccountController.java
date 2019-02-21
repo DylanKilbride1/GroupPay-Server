@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -41,5 +42,13 @@ public class GroupAccountController {
 	@ResponseBody
 	public GroupAccount getDetailedGroupInfo(@PathVariable(name = "groupAccountId") long groupAccountId) {
 		return groupAccountService.getDetailedGroupAccountInfo(groupAccountId);
+	}
+
+	@RequestMapping(value = "/getAllUserAssociatedAccounts/{userId}",
+					method = RequestMethod.GET,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<GroupAccount> getAllUserAssociatedAccounts(@PathVariable(name = "userId") long userId) {
+		return groupAccountService.getUserAssociatedAccounts(userId);
 	}
 }
