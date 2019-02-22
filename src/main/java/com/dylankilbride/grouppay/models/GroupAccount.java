@@ -125,7 +125,7 @@ public class GroupAccount {
 
 //	public void addUserToGroupParticipants(User user){
 //		groupMembers.add(user); //TODO This returns false but increments set size.. Why are users not being reflected in DB?
-//		incrementGroupMembers();
+//		incrementGroupMembers ();
 //	}
 
 	public void incrementGroupMembers() {

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,15 +24,18 @@ public class GroupAccountService {
 
 	public GroupAccount createBasicGroupAccount(GroupAccount groupAccount) {
 		User groupAdmin = userRepository.findUsersById(groupAccount.getAdminId());
-		//groupAccount.addUserToGroupParticipants(groupAdmin);
-		return groupAccountRepository.save(groupAccount);
+		groupAccount.incrementGroupMembers();
+		groupAccountRepository.save(groupAccount);
+		groupAccountRepository.addUsersToGroupAccount(groupAccount.getGroupAccountId(), groupAdmin.getId());
+		return groupAccount;
 	}
 
 	public GroupAccount addParticipantsToGroupAccount(Long groupAccountId, List<Contact> contacts) {
 		GroupAccount accountToOwnUsers = groupAccountRepository.findByGroupAccountId(groupAccountId);
-		for(Contact contact: contacts) {
+		for (Contact contact : contacts) {
 			User userToBeAdded = userRepository.findUsersByEmailAddress(contact.getContactEmail());
-		//	accountToOwnUsers.addUserToGroupParticipants(userToBeAdded);
+			groupAccountRepository.addUsersToGroupAccount(groupAccountId, userToBeAdded.getId());
+			accountToOwnUsers.incrementGroupMembers();
 		}
 		groupAccountRepository.save(accountToOwnUsers);
 		return accountToOwnUsers;
@@ -42,7 +46,6 @@ public class GroupAccountService {
 	}
 
 	public List<GroupAccount> getUserAssociatedAccounts(long userId) {
-		User loggedInUser = userRepository.findUsersById(userId);
 		List<BigInteger> userAssociatedAccountIds = groupAccountRepository.getUserAssociatedAccounts(userId);
 		List<GroupAccount> userAssociatedAccounts = new ArrayList<>();
 		for(int i = 0; i < userAssociatedAccountIds.size(); i++){

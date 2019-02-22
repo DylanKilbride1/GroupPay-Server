@@ -2,6 +2,7 @@ package com.dylankilbride.grouppay.controllers;
 
 import com.dylankilbride.grouppay.models.Contact;
 import com.dylankilbride.grouppay.models.GroupAccount;
+import com.dylankilbride.grouppay.models.User;
 import com.dylankilbride.grouppay.services.GroupAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
