@@ -33,7 +33,8 @@ public class User {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER,
+	cascade = CascadeType.ALL)
 	@JoinColumn(name = "profile_image")
 	private ProfileImage profileImage;
 
@@ -110,7 +111,17 @@ public class User {
 	public List<GroupAccount> getUsersAccounts() {
 		return groupAccounts;
 	}
+
+	public ProfileImage getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(ProfileImage profileImage) {
+		this.profileImage = profileImage;
+	}
 }
+
+
 
 
 //Get all the users in a group account - loop in a loop

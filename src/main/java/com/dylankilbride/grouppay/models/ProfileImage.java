@@ -1,5 +1,6 @@
 package com.dylankilbride.grouppay.models;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -8,13 +9,22 @@ public class ProfileImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "profile_image_id")
-	private long profileImageId;
+	private long image_id;
 
 	@Column(name = "profile_image_location")
 	private String profileImageLocation;
 
-	@OneToOne(fetch = FetchType.EAGER,
-					cascade = CascadeType.ALL,
-					mappedBy = "profileImage")
-	private User user;
+	public ProfileImage(String profileImageLocation) {
+		this.profileImageLocation = profileImageLocation;
+	}
+
+	public ProfileImage() {}
+
+	public String getProfileImageLocation() {
+		return profileImageLocation;
+	}
+
+	public void setProfileImageLocation(String profileImageLocation) {
+		this.profileImageLocation = profileImageLocation;
+	}
 }

@@ -1,7 +1,9 @@
 package com.dylankilbride.grouppay.services;
 
+import com.dylankilbride.grouppay.models.ProfileImage;
 import com.dylankilbride.grouppay.models.User;
 import com.dylankilbride.grouppay.repositories.UserRepository;
+import com.dylankilbride.grouppay.returnobjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.returnobjects.UsersProfileDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,5 +94,13 @@ public class UserService {
 						user.getLastName(),
 						user.getEmailAddress(),
 						user.getMobileNumber());
+	}
+
+	public ImageUploadResponse saveUsersProfilePhoto(String userId, String fileUrl) {
+		long id = Long.valueOf(userId);
+		User foundUser = userRepository.findUsersById(id);
+		foundUser.setProfileImage(new ProfileImage(fileUrl));
+		userRepository.save(foundUser);
+		return new ImageUploadResponse("success", fileUrl);
 	}
 }

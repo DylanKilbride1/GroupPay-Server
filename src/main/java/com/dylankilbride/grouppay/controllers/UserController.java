@@ -2,11 +2,14 @@ package com.dylankilbride.grouppay.controllers;
 
 import com.dylankilbride.grouppay.models.User;
 import com.dylankilbride.grouppay.repositories.UserRepository;
+import com.dylankilbride.grouppay.returnobjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.returnobjects.UsersProfileDetails;
+import com.dylankilbride.grouppay.services.S3ImageManagerService;
 import com.dylankilbride.grouppay.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -18,6 +21,8 @@ public class UserController {
 	UserRepository userRepository;
 	@Autowired
 	UserService userService;
+	@Autowired
+	S3ImageManagerService s3ImageManagerService;
 
 	@RequestMapping(value = "/register",
 					method = RequestMethod.POST,
@@ -68,5 +73,16 @@ public class UserController {
 	public UsersProfileDetails updateUserFullName(@PathVariable("userId") String userId,
 	                                              @RequestBody User user){
 		return userService.updateUsersFullName(userId, user);
+	}
+
+	@RequestMapping(value = "user/uploadProfileImage/{userId}",
+					method = RequestMethod.POST,
+					consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@ResponseBody
+	public ImageUploadResponse uploadUsersProfileImage(@PathVariable("userId") String userId,
+	                                                   @RequestPart MultipartFile file,
+	                                                   @RequestPart("name") String body) {
+		return userService.saveUsersProfilePhoto(userId,
+						s3ImageManagerService.uploadFile(file).getFileUrl());
 	}
 }
