@@ -2,6 +2,7 @@ package com.dylankilbride.grouppay.services;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.Protocol;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -32,6 +33,14 @@ public class AmazonClient {
 	String endpointUrl;
 	@Value("${aws.image.bucket}")
 	private String bucketName;
+	String accessKey = "AKIAIU272V4VCYLUFTUQ";
+	String secretKey = "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";
+
+	public AmazonClient () {
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+		s3Client = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).withCredentials(new AWSStaticCredentialsProvider(awsCreds)).build();
+	}
+
 
 	private File convertMultiPartToFile(MultipartFile file) throws IOException {
 		File convFile = new File(file.getOriginalFilename());
@@ -47,7 +56,7 @@ public class AmazonClient {
 
 	private void uploadFileTos3bucket(String fileName, File file) {
 		s3Client.putObject(new PutObjectRequest(bucketName, fileName, file)
-						.withCannedAcl(CannedAccessControlList.PublicRead));
+					.withCannedAcl(CannedAccessControlList.PublicRead));
 	}
 
 	public ImageUploadResponse uploadFileToBucket(MultipartFile multipartFile) {
@@ -57,6 +66,9 @@ public class AmazonClient {
 			File file = convertMultiPartToFile(multipartFile);
 			String fileName = generateFileName(multipartFile);
 			fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+			System.out.println("EP URL = " + endpointUrl);
+			System.out.println("BucketName = " + bucketName);
+			System.out.println("File URL "+fileUrl);
 			uploadFileTos3bucket(fileName, file);
 			file.delete();
 		} catch (Exception e) {
@@ -67,7 +79,11 @@ public class AmazonClient {
 
 	public ImageUploadResponse deleteFileFromS3Bucket(String fileUrl) {
 		String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-		s3Client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
-		return new ImageUploadResponse("success");
+		try {
+			s3Client.deleteObject(new DeleteObjectRequest(bucketName + "/", fileName));
+			return new ImageUploadResponse("success");
+		} catch (SdkClientException s) {
+			return new ImageUploadResponse("failure");
+		}
 	}
 }

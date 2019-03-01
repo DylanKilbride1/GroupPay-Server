@@ -85,4 +85,16 @@ public class UserController {
 		return userService.saveUsersProfilePhoto(userId,
 						s3ImageManagerService.uploadFile(file).getFileUrl());
 	}
+
+	@RequestMapping(value = "user/deleteProfileImage/{userId}",
+					method = RequestMethod.POST,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public boolean deleteUsersProfileImage(@PathVariable("userId") String userId) {
+		long id = Long.valueOf(userId);
+		User foundUser = userRepository.findUsersById(id);
+		s3ImageManagerService.deleteFile(foundUser.getProfileImage().getProfileImageLocation());
+		return true;
+	}
+
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@RestController
+@Service
 public class S3ImageManagerService {
 
 	private AmazonClient amazonClient;
@@ -17,6 +17,7 @@ public class S3ImageManagerService {
 	}
 
 	public ImageUploadResponse uploadFile(MultipartFile file){
+
 		return this.amazonClient.uploadFileToBucket(file);
 	}
 

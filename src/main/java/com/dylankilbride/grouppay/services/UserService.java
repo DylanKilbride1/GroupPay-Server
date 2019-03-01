@@ -2,6 +2,7 @@ package com.dylankilbride.grouppay.services;
 
 import com.dylankilbride.grouppay.models.ProfileImage;
 import com.dylankilbride.grouppay.models.User;
+import com.dylankilbride.grouppay.repositories.ProfileImageRepository;
 import com.dylankilbride.grouppay.repositories.UserRepository;
 import com.dylankilbride.grouppay.returnobjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.returnobjects.UsersProfileDetails;
@@ -16,6 +17,10 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private ProfileImageRepository profileImageRepository;
+	@Autowired
+	private S3ImageManagerService s3ImageManagerService;
 
 	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) { //Should I be returning response status?
 		Map<String, String> resultMap = new HashMap<>();
@@ -99,8 +104,17 @@ public class UserService {
 	public ImageUploadResponse saveUsersProfilePhoto(String userId, String fileUrl) {
 		long id = Long.valueOf(userId);
 		User foundUser = userRepository.findUsersById(id);
-		foundUser.setProfileImage(new ProfileImage(fileUrl));
-		userRepository.save(foundUser);
+		if (foundUser.getProfileImage() == null) {
+			foundUser.setProfileImage(new ProfileImage(fileUrl));
+			userRepository.save(foundUser);
+		} else {
+			ProfileImage image = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
+			s3ImageManagerService.deleteFile(foundUser.getProfileImage().getProfileImageLocation());
+			foundUser.setProfileImage(new ProfileImage(fileUrl));
+			profileImageRepository.delete(image);
+
+			userRepository.save(foundUser);
+		}
 		return new ImageUploadResponse("success", fileUrl);
 	}
 }
