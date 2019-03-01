@@ -8,13 +8,24 @@ public class GroupImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name = "group_image_id")
-	private long groupImageId;
+	private long id;
+
 
 	@Column(name = "group_image_location")
 	private String groupImageLocation;
 
-	@OneToOne(fetch = FetchType.EAGER,
-					cascade =  CascadeType.ALL,
-					mappedBy = "groupImage")
-	private GroupAccount groupAccount;
+	public GroupImage(String groupImageLocation) {
+		this.groupImageLocation = groupImageLocation;
+	}
+
+	public GroupImage() {
+	}
+
+	public String getGroupImageLocation() {
+		return groupImageLocation;
+	}
+
+	public void setGroupImageLocation(String groupImageLocation) {
+		this.groupImageLocation = groupImageLocation;
+	}
 }

@@ -1,6 +1,8 @@
 package com.dylankilbride.grouppay.models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Table(name = "User", schema = "grouppay")
@@ -28,7 +30,8 @@ public class User {
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER,
+	cascade = CascadeType.ALL)
 	@JoinColumn(name = "profile_image")
 	private ProfileImage profileImage;
 
@@ -37,9 +40,11 @@ public class User {
 	mappedBy = "user")
 	private Set<Transaction> transaction;
 
-	@ManyToMany(mappedBy="groupMembers")
-	private Set<GroupAccount> groupAccounts;
-
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "groupAccount_users",
+					joinColumns = {@JoinColumn(name = "groupAccount_id")},
+					inverseJoinColumns = {@JoinColumn(name = "user_id")})
+	private List<GroupAccount> groupAccounts = new ArrayList<>();
 
 	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber) {
 		this.firstName = firstName;
@@ -99,4 +104,34 @@ public class User {
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
+
+	public List<GroupAccount> getUsersAccounts() {
+		return groupAccounts;
+	}
+
+	public ProfileImage getProfileImage() {
+		return profileImage;
+	}
+
+	public void setProfileImage(ProfileImage profileImage) {
+		this.profileImage = profileImage;
+	}
 }
+
+
+
+
+//Get all the users in a group account - loop in a loop
+//public void getUsersinAccounts(int userId){
+//
+//	User currentUser = select * from user where userId = userId;
+//	List<GroupAccount> accounts = select * from groupAccount where userId = userId;
+//
+//	for(GroupAccount acc: accounts){
+//		List<User> users = acc.getUsers();
+//		for(User u : users){
+//			User userInGroup = u.getFirstName();
+//			}
+//		}
+//	}
+

@@ -2,7 +2,9 @@ package com.dylankilbride.grouppay.models;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,12 +39,6 @@ public class GroupAccount {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
-
-	@ManyToMany
-	@JoinTable(name = "groupAccount_users",
-					joinColumns = {@JoinColumn(name = "groupAccount_id")},
-					inverseJoinColumns = {@JoinColumn(name = "user_id")})
-	private Set<User> groupMembers = new HashSet<>();
 
 	public GroupAccount(long adminId, String accountName, String accountDescription, BigDecimal totalAmountOwed, BigDecimal totalAmountPaid) {
 		this.adminId = adminId;
@@ -127,10 +123,10 @@ public class GroupAccount {
 		this.groupImage = groupImage;
 	}
 
-	public void addUserToGroupParticipants(User user){
-		groupMembers.add(user); //TODO This returns false but increments set size.. Why are users not being reflected in DB?
-		incrementGroupMembers();
-	}
+//	public void addUserToGroupParticipants(User user){
+//		groupMembers.add(user); //TODO This returns false but increments set size.. Why are users not being reflected in DB?
+//		incrementGroupMembers ();
+//	}
 
 	public void incrementGroupMembers() {
 		numberOfMembers++;
