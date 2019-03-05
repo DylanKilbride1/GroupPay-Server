@@ -21,6 +21,7 @@ public class UserService {
 	private ProfileImageRepository profileImageRepository;
 	@Autowired
 	private S3ImageManagerService s3ImageManagerService;
+	private String noProfileImage = "https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no-profile-image.png";
 
 	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) { //Should I be returning response status?
 		Map<String, String> resultMap = new HashMap<>();
@@ -55,37 +56,54 @@ public class UserService {
 
 	public UsersProfileDetails getUserDetails(String uid) {
 		long id = Long.valueOf(uid);
+		String imageUrl;
 		User user = userRepository.findUsersById(id);
-		UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
-						user.getFirstName(),
-						user.getLastName(),
-						user.getEmailAddress(),
-						user.getMobileNumber());
-		return returnUser;
+		if(user.getProfileImage() == null) {
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							null);
+			return returnUser;
+		} else {
+			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							imageUrl);
+			return returnUser;
+		}
 	}
 
 	public UsersProfileDetails updateUsersEmail(String uid, User user) {
 		long id = Long.valueOf(uid);
 		User foundUser = userRepository.findUsersById(id);
+		ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
 		foundUser.setEmailAddress(user.getEmailAddress());
 		userRepository.save(foundUser);
 		return new UsersProfileDetails(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
 						user.getEmailAddress(),
-						user.getMobileNumber());
+						user.getMobileNumber(),
+						usersImage.getProfileImageLocation());
 	}
 
 	public UsersProfileDetails updateUsersMobileNumber(String uid, User user) {
 		long id = Long.valueOf(uid);
 		User foundUser = userRepository.findUsersById(id);
+		ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
 		foundUser.setMobileNumber(user.getMobileNumber());
 		userRepository.save(foundUser);
 		return new UsersProfileDetails(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
 						user.getEmailAddress(),
-						user.getMobileNumber());
+						user.getMobileNumber(),
+						usersImage.getProfileImageLocation());
 	}
 
 	public UsersProfileDetails updateUsersFullName(String uid, User user) {
@@ -93,12 +111,14 @@ public class UserService {
 		User foundUser = userRepository.findUsersById(id);
 		foundUser.setFirstName(user.getFirstName());
 		foundUser.setLastName(user.getLastName());
+		ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
 		userRepository.save(foundUser);
 		return new UsersProfileDetails(user.getId(),
 						user.getFirstName(),
 						user.getLastName(),
 						user.getEmailAddress(),
-						user.getMobileNumber());
+						user.getMobileNumber(),
+						usersImage.getProfileImageLocation());
 	}
 
 	public ImageUploadResponse saveUsersProfilePhoto(String userId, String fileUrl) {
@@ -116,5 +136,16 @@ public class UserService {
 			userRepository.save(foundUser);
 		}
 		return new ImageUploadResponse("success", fileUrl);
+	}
+
+	public String getProfileImageUrl(long imageId){
+		String imageUrl;
+		try {
+			ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(imageId);
+			imageUrl = usersImage.getProfileImageLocation();
+		} catch (Exception e) {
+			imageUrl = null;
+		}
+		return imageUrl;
 	}
 }

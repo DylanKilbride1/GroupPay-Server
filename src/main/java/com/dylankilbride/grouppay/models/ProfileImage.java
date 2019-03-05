@@ -8,10 +8,10 @@ public class ProfileImage {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	@Column(name = "profile_image_id")
+	@Column(name = "image_id")
 	private long imageId;
 
-	@Column(name = "profile_image_location")
+	@Column(name = "image_location")
 	private String profileImageLocation;
 
 	public ProfileImage(String profileImageLocation) {

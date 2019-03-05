@@ -1,9 +1,6 @@
 package com.dylankilbride.grouppay.services;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
 import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
@@ -59,18 +56,14 @@ public class AmazonClient {
 					.withCannedAcl(CannedAccessControlList.PublicRead));
 	}
 
-	public ImageUploadResponse uploadFileToBucket(MultipartFile multipartFile) {
+	public ImageUploadResponse prepareFileForUpload(MultipartFile multipartFile) {
 
 		String fileUrl = "";
 		try {
 			File file = convertMultiPartToFile(multipartFile);
 			String fileName = generateFileName(multipartFile);
-			fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
-			System.out.println("EP URL = " + endpointUrl);
-			System.out.println("BucketName = " + bucketName);
-			System.out.println("File URL "+fileUrl);
+			fileUrl = endpointUrl + ".amazonaws.com/" + bucketName + "/" + fileName;
 			uploadFileTos3bucket(fileName, file);
-			file.delete();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
