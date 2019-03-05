@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@SuppressWarnings("Duplicates")
 public class UserService {
 
 	@Autowired
@@ -80,45 +81,81 @@ public class UserService {
 
 	public UsersProfileDetails updateUsersEmail(String uid, User user) {
 		long id = Long.valueOf(uid);
+		String imageUrl;
 		User foundUser = userRepository.findUsersById(id);
-		ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
 		foundUser.setEmailAddress(user.getEmailAddress());
 		userRepository.save(foundUser);
-		return new UsersProfileDetails(user.getId(),
-						user.getFirstName(),
-						user.getLastName(),
-						user.getEmailAddress(),
-						user.getMobileNumber(),
-						usersImage.getProfileImageLocation());
+		if (foundUser.getProfileImage() == null) {
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							null);
+			return returnUser;
+		} else {
+			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							imageUrl);
+			return returnUser;
+		}
 	}
 
 	public UsersProfileDetails updateUsersMobileNumber(String uid, User user) {
 		long id = Long.valueOf(uid);
+		String imageUrl;
 		User foundUser = userRepository.findUsersById(id);
-		ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
 		foundUser.setMobileNumber(user.getMobileNumber());
 		userRepository.save(foundUser);
-		return new UsersProfileDetails(user.getId(),
-						user.getFirstName(),
-						user.getLastName(),
-						user.getEmailAddress(),
-						user.getMobileNumber(),
-						usersImage.getProfileImageLocation());
+		if (foundUser.getProfileImage() == null) {
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							null);
+			return returnUser;
+		} else {
+			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							imageUrl);
+			return returnUser;
+		}
 	}
 
 	public UsersProfileDetails updateUsersFullName(String uid, User user) {
 		long id = Long.valueOf(uid);
+		String imageUrl;
 		User foundUser = userRepository.findUsersById(id);
 		foundUser.setFirstName(user.getFirstName());
 		foundUser.setLastName(user.getLastName());
-		ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
 		userRepository.save(foundUser);
-		return new UsersProfileDetails(user.getId(),
-						user.getFirstName(),
-						user.getLastName(),
-						user.getEmailAddress(),
-						user.getMobileNumber(),
-						usersImage.getProfileImageLocation());
+		if (foundUser.getProfileImage() == null) {
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							null);
+			return returnUser;
+		} else {
+			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
+			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							imageUrl);
+			return returnUser;
+		}
 	}
 
 	public ImageUploadResponse saveUsersProfilePhoto(String userId, String fileUrl) {
