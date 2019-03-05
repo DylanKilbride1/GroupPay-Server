@@ -18,7 +18,7 @@ public class S3ImageManagerService {
 
 	public ImageUploadResponse uploadFile(MultipartFile file){
 
-		return this.amazonClient.uploadFileToBucket(file);
+		return this.amazonClient.prepareFileForUpload(file);
 	}
 
 	public ImageUploadResponse deleteFile(String fileUrl){

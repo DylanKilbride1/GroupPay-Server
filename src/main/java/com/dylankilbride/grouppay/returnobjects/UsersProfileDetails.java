@@ -7,13 +7,15 @@ public class UsersProfileDetails {
 	private String lastName;
 	private String emailAddress;
 	private String mobileNumber;
+	private String profileUrl;
 
-	public UsersProfileDetails(long id, String firstName, String lastName, String emailAddress, String mobileNumber) {
+	public UsersProfileDetails(long id, String firstName, String lastName, String emailAddress, String mobileNumber, String profileUrl) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
 		this.mobileNumber = mobileNumber;
+		this.profileUrl = profileUrl;
 	}
 
 	public UsersProfileDetails() {
@@ -58,5 +60,13 @@ public class UsersProfileDetails {
 
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
+	}
+
+	public String getProfileUrl() {
+		return profileUrl;
+	}
+
+	public void setProfileUrl(String profileUrl) {
+		this.profileUrl = profileUrl;
 	}
 }

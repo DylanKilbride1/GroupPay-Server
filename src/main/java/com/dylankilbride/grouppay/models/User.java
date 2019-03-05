@@ -116,22 +116,5 @@ public class User {
 	public void setProfileImage(ProfileImage profileImage) {
 		this.profileImage = profileImage;
 	}
+
 }
-
-
-
-
-//Get all the users in a group account - loop in a loop
-//public void getUsersinAccounts(int userId){
-//
-//	User currentUser = select * from user where userId = userId;
-//	List<GroupAccount> accounts = select * from groupAccount where userId = userId;
-//
-//	for(GroupAccount acc: accounts){
-//		List<User> users = acc.getUsers();
-//		for(User u : users){
-//			User userInGroup = u.getFirstName();
-//			}
-//		}
-//	}
-
