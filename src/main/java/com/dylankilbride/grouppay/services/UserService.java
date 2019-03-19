@@ -48,6 +48,11 @@ public class UserService {
 			resultMap.put("result", "1");
 			resultMap.put("userId", Long.toString(user.getId()));
 			resultMap.put("name", user.getFirstName() + " " + user.getLastName());
+			if(user.getProfileImage() == null){
+				resultMap.put("profileImageUrl", null);
+			} else {
+				resultMap.put("profileImageUrl", getProfileImageUrl(user.getProfileImage().getImageId()));
+			}
 			return resultMap;
 		} else {
 			resultMap.put("result", "0");
@@ -111,15 +116,6 @@ public class UserService {
 		User foundUser = userRepository.findUsersById(id);
 		foundUser.setMobileNumber(user.getMobileNumber());
 		userRepository.save(foundUser);
-		if (foundUser.getProfileImage() == null) {
-			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
-							user.getFirstName(),
-							user.getLastName(),
-							user.getEmailAddress(),
-							user.getMobileNumber(),
-							null);
-			return returnUser;
-		} else {
 			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
 			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
 							user.getFirstName(),
@@ -129,7 +125,6 @@ public class UserService {
 							imageUrl);
 			return returnUser;
 		}
-	}
 
 	public UsersProfileDetails updateUsersFullName(String uid, User user) {
 		long id = Long.valueOf(uid);

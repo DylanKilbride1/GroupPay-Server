@@ -1,5 +1,7 @@
 package com.dylankilbride.grouppay.returnobjects;
 
+import com.dylankilbride.grouppay.models.ProfileImage;
+
 public class UsersProfileDetails {
 
 	private long id;
@@ -18,7 +20,7 @@ public class UsersProfileDetails {
 		this.profileUrl = profileUrl;
 	}
 
-	public UsersProfileDetails() {
+	public UsersProfileDetails(String firstName, String lastName, String emailAddress, String mobileNumber, ProfileImage profileImage) {
 
 	}
 

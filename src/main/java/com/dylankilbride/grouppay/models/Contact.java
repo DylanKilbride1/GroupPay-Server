@@ -3,16 +3,19 @@ package com.dylankilbride.grouppay.models;
 public class Contact {
 
 	private int testResourceId;
+	private String fullname;
 	private String firstName;
 	private String lastName;
 	private String contactEmail;
+	private String contactPhoneNumber;
 	private boolean isPressed = false;
 
-	public Contact(int testResourceId, String firstName, String lastName, String contactEmail) {
+	public Contact(int testResourceId, String firstName, String lastName, String contactEmail, String contactPhoneNumber) {
 		this.testResourceId = testResourceId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.contactEmail = contactEmail;
+		this.contactPhoneNumber = contactPhoneNumber;
 	}
 
 	public Contact(String firstName, String lastName, String contactEmail) {
@@ -69,5 +72,13 @@ public class Contact {
 
 	public String getFullName() {
 		return firstName + " " + lastName;
+	}
+
+	public String getContactPhoneNumber() {
+		return contactPhoneNumber;
+	}
+
+	public void setContactPhoneNumber(String contactPhoneNumber) {
+		this.contactPhoneNumber = contactPhoneNumber;
 	}
 }

@@ -110,7 +110,11 @@ public class User {
 	}
 
 	public ProfileImage getProfileImage() {
-		return profileImage;
+		if(profileImage != null) {
+			return profileImage;
+		} else {
+			return null;
+		}
 	}
 
 	public void setProfileImage(ProfileImage profileImage) {
