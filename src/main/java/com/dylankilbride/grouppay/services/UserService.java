@@ -23,6 +23,7 @@ public class UserService {
 	@Autowired
 	private S3ImageManagerService s3ImageManagerService;
 	private String noProfileImage = "https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no-profile-image.png";
+	private UsersProfileDetails returnUser;
 
 	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) { //Should I be returning response status?
 		Map<String, String> resultMap = new HashMap<>();
@@ -133,24 +134,26 @@ public class UserService {
 		foundUser.setFirstName(user.getFirstName());
 		foundUser.setLastName(user.getLastName());
 		userRepository.save(foundUser);
-		if (foundUser.getProfileImage() == null) {
-			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
-							user.getFirstName(),
-							user.getLastName(),
-							user.getEmailAddress(),
-							user.getMobileNumber(),
-							null);
-			return returnUser;
-		} else {
-			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
-			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
-							user.getFirstName(),
-							user.getLastName(),
-							user.getEmailAddress(),
-							user.getMobileNumber(),
-							imageUrl);
-			return returnUser;
-		}
+		try {
+				imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
+				 returnUser = new UsersProfileDetails(user.getId(),
+								user.getFirstName(),
+								user.getLastName(),
+								user.getEmailAddress(),
+								user.getMobileNumber(),
+								imageUrl);
+				return returnUser;
+
+
+		} catch(NullPointerException e){
+				 returnUser = new UsersProfileDetails(user.getId(),
+								user.getFirstName(),
+								user.getLastName(),
+								user.getEmailAddress(),
+								user.getMobileNumber(),
+								noProfileImage);
+				return returnUser;
+			}
 	}
 
 	public ImageUploadResponse saveUsersProfilePhoto(String userId, String fileUrl) {
@@ -164,7 +167,6 @@ public class UserService {
 			s3ImageManagerService.deleteFile(foundUser.getProfileImage().getProfileImageLocation());
 			foundUser.setProfileImage(new ProfileImage(fileUrl));
 			profileImageRepository.delete(image);
-
 			userRepository.save(foundUser);
 		}
 		return new ImageUploadResponse("success", fileUrl);
