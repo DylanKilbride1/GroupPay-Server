@@ -30,10 +30,10 @@ public class GroupAccountService {
 		return groupAccount;
 	}
 
-	public GroupAccount addParticipantsToGroupAccount(Long groupAccountId, List<Contact> contacts) {
+	public GroupAccount addParticipantsToGroupAccount(Long groupAccountId, List<User> contacts) {
 		GroupAccount accountToOwnUsers = groupAccountRepository.findByGroupAccountId(groupAccountId);
-		for (Contact contact : contacts) {
-			User userToBeAdded = userRepository.findUsersByMobileNumber(parseContactPhoneNumber(contact.getContactPhoneNumber()));
+		for (User contact : contacts) {
+			User userToBeAdded = userRepository.findUsersByMobileNumber(parseContactPhoneNumber(contact.getMobileNumber()));
 			groupAccountRepository.addUsersToGroupAccount(groupAccountId, userToBeAdded.getId());
 			accountToOwnUsers.incrementGroupMembers();
 		}
@@ -52,6 +52,16 @@ public class GroupAccountService {
 			userAssociatedAccounts.add(groupAccountRepository.findByGroupAccountId(userAssociatedAccountIds.get(i).intValue()));
 		}
 		return userAssociatedAccounts;
+	}
+
+	public List<User> getAllContactsWithGrouppayAccounts(List<String> usersContactsPhoneNumbers) {
+		List<User> contactsWithAccounts = new ArrayList<>();
+		for (String contactPhoneNumber : usersContactsPhoneNumbers){
+			if(userRepository.existsByMobileNumber(parseContactPhoneNumber(contactPhoneNumber))) {
+				contactsWithAccounts.add(userRepository.findUsersByMobileNumber(parseContactPhoneNumber(contactPhoneNumber)));
+			}
+		}
+		return contactsWithAccounts;
 	}
 
 	public String parseContactPhoneNumber(String phoneNumber) {

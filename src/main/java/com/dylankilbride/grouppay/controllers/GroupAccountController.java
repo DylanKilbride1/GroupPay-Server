@@ -33,7 +33,7 @@ public class GroupAccountController {
 					consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public GroupAccount addParticipantsToAccount(@PathVariable(name = "groupAccountId") long groupAccountId,
-	                                             @RequestBody List<Contact> contacts) {
+	                                             @RequestBody List<User> contacts) {
 		return groupAccountService.addParticipantsToGroupAccount(groupAccountId, contacts);
 	}
 
@@ -51,5 +51,13 @@ public class GroupAccountController {
 	@ResponseBody
 	public List<GroupAccount> getAllUserAssociatedAccounts(@PathVariable(name = "userId") long userId) {
 		return groupAccountService.getUserAssociatedAccounts(userId);
+	}
+
+	@RequestMapping(value = "/getAllContactsWithGrouppayAccounts",
+						method = RequestMethod.POST,
+						produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<User> getAllContactsWithGrouppayAccounts(@RequestBody List<String> usersContactsPhoneNumbers) {
+		return groupAccountService.getAllContactsWithGrouppayAccounts(usersContactsPhoneNumbers);
 	}
 }
