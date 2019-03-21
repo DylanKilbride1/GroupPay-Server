@@ -120,5 +120,4 @@ public class User {
 	public void setProfileImage(ProfileImage profileImage) {
 		this.profileImage = profileImage;
 	}
-
 }

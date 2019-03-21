@@ -31,11 +31,13 @@ public class UserService {
 			resultMap.put("result", "error");
 			return resultMap;
 		} else {
-			userRepository.save(new User(user.get("first_name"),
+			User userToBeRegistered = new User(user.get("first_name"),
 							user.get("last_name"),
 							user.get("email_address"),
 							user.get("password"),
-							user.get("mobile_number")));
+							user.get("mobile_number"));
+			userToBeRegistered.setProfileImage(profileImageRepository.findProfileImageByImageId(1)); //1 is the id of the standard avatar img
+			userRepository.save(userToBeRegistered);
 			resultMap.put("result", "registered");
 			return resultMap;
 		}
@@ -91,22 +93,22 @@ public class UserService {
 		User foundUser = userRepository.findUsersById(id);
 		foundUser.setEmailAddress(user.getEmailAddress());
 		userRepository.save(foundUser);
-		if (foundUser.getProfileImage() == null) {
-			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
-							user.getFirstName(),
-							user.getLastName(),
-							user.getEmailAddress(),
-							user.getMobileNumber(),
-							null);
-			return returnUser;
-		} else {
+		try {
 			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
-			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+			returnUser = new UsersProfileDetails(user.getId(),
 							user.getFirstName(),
 							user.getLastName(),
 							user.getEmailAddress(),
 							user.getMobileNumber(),
 							imageUrl);
+			return returnUser;
+		} catch(NullPointerException e){
+			returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							noProfileImage);
 			return returnUser;
 		}
 	}
@@ -117,14 +119,24 @@ public class UserService {
 		User foundUser = userRepository.findUsersById(id);
 		foundUser.setMobileNumber(user.getMobileNumber());
 		userRepository.save(foundUser);
+		try {
 			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
-			UsersProfileDetails returnUser = new UsersProfileDetails(user.getId(),
+			returnUser = new UsersProfileDetails(user.getId(),
 							user.getFirstName(),
 							user.getLastName(),
 							user.getEmailAddress(),
 							user.getMobileNumber(),
 							imageUrl);
 			return returnUser;
+		} catch(NullPointerException e){
+			returnUser = new UsersProfileDetails(user.getId(),
+							user.getFirstName(),
+							user.getLastName(),
+							user.getEmailAddress(),
+							user.getMobileNumber(),
+							noProfileImage);
+			return returnUser;
+		}
 		}
 
 	public UsersProfileDetails updateUsersFullName(String uid, User user) {
@@ -143,8 +155,6 @@ public class UserService {
 								user.getMobileNumber(),
 								imageUrl);
 				return returnUser;
-
-
 		} catch(NullPointerException e){
 				 returnUser = new UsersProfileDetails(user.getId(),
 								user.getFirstName(),
@@ -164,9 +174,11 @@ public class UserService {
 			userRepository.save(foundUser);
 		} else {
 			ProfileImage image = profileImageRepository.findProfileImageByImageId(foundUser.getProfileImage().getImageId());
-			s3ImageManagerService.deleteFile(foundUser.getProfileImage().getProfileImageLocation());
+			//s3ImageManagerService.deleteFile(foundUser.getProfileImage().getProfileImageLocation()); //Doesn't work
 			foundUser.setProfileImage(new ProfileImage(fileUrl));
-			profileImageRepository.delete(image);
+			if(image.getImageId() != 1) {
+				profileImageRepository.delete(image);
+			}
 			userRepository.save(foundUser);
 		}
 		return new ImageUploadResponse("success", fileUrl);
@@ -178,7 +190,7 @@ public class UserService {
 			ProfileImage usersImage = profileImageRepository.findProfileImageByImageId(imageId);
 			imageUrl = usersImage.getProfileImageLocation();
 		} catch (Exception e) {
-			imageUrl = null;
+			imageUrl = noProfileImage;
 		}
 		return imageUrl;
 	}
