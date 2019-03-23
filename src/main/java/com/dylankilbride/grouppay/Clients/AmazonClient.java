@@ -1,4 +1,4 @@
-package com.dylankilbride.grouppay.services;
+package com.dylankilbride.grouppay.Clients;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -9,7 +9,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.dylankilbride.grouppay.returnobjects.ImageUploadResponse;
+import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,14 +1,12 @@
-package com.dylankilbride.grouppay.controllers;
+package com.dylankilbride.grouppay.Controllers;
 
-import com.dylankilbride.grouppay.models.Contact;
-import com.dylankilbride.grouppay.models.GroupAccount;
-import com.dylankilbride.grouppay.models.User;
-import com.dylankilbride.grouppay.services.GroupAccountService;
+import com.dylankilbride.grouppay.Models.GroupAccount;
+import com.dylankilbride.grouppay.Models.User;
+import com.dylankilbride.grouppay.Services.GroupAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @RestController

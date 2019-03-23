@@ -1,9 +1,9 @@
-package com.dylankilbride.grouppay.services;
+package com.dylankilbride.grouppay.Services;
 
-import com.dylankilbride.grouppay.returnobjects.ImageUploadResponse;
+import com.dylankilbride.grouppay.Clients.AmazonClient;
+import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service

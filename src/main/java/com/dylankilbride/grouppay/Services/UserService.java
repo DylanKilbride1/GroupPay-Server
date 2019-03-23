@@ -1,11 +1,11 @@
-package com.dylankilbride.grouppay.services;
+package com.dylankilbride.grouppay.Services;
 
-import com.dylankilbride.grouppay.models.ProfileImage;
-import com.dylankilbride.grouppay.models.User;
-import com.dylankilbride.grouppay.repositories.ProfileImageRepository;
-import com.dylankilbride.grouppay.repositories.UserRepository;
-import com.dylankilbride.grouppay.returnobjects.ImageUploadResponse;
-import com.dylankilbride.grouppay.returnobjects.UsersProfileDetails;
+import com.dylankilbride.grouppay.Models.ProfileImage;
+import com.dylankilbride.grouppay.Models.User;
+import com.dylankilbride.grouppay.Repositories.ProfileImageRepository;
+import com.dylankilbride.grouppay.Repositories.UserRepository;
+import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
+import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

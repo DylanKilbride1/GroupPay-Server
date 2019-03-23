@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = {"com.dylankilbride.grouppay"})//Starting point for application
-@EnableJpaRepositories(basePackages = "com.dylankilbride.grouppay.repositories")
+@EnableJpaRepositories(basePackages = "com.dylankilbride.grouppay.Repositories")
 @EnableAutoConfiguration
 public class GroupPayApplication {
 

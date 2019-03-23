@@ -1,4 +1,4 @@
-package com.dylankilbride.grouppay.models;
+package com.dylankilbride.grouppay.Models;
 
 import javax.persistence.*;
 

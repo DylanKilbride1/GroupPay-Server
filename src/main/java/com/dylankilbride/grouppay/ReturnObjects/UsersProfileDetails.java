@@ -1,6 +1,6 @@
-package com.dylankilbride.grouppay.returnobjects;
+package com.dylankilbride.grouppay.ReturnObjects;
 
-import com.dylankilbride.grouppay.models.ProfileImage;
+import com.dylankilbride.grouppay.Models.ProfileImage;
 
 public class UsersProfileDetails {
 
