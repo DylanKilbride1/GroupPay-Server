@@ -14,6 +14,8 @@ public class StripeCharge {
 		this.groupAccountId = groupAccountId;
 	}
 
+	public StripeCharge(){}
+
 	public String getTokenId() {
 		return tokenId;
 	}

@@ -108,6 +108,10 @@ public class GroupAccount {
 		return totalAmountPaid;
 	}
 
+	public void updateAmountPaid(BigDecimal amountPaid) {
+		setTotalAmountPaid(totalAmountPaid.add(amountPaid));
+	}
+
 	public void setTotalAmountPaid(BigDecimal totalAmountPaid) {
 		this.totalAmountPaid = totalAmountPaid;
 	}
