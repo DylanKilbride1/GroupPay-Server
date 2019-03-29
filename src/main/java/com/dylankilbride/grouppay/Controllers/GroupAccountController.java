@@ -1,8 +1,10 @@
 package com.dylankilbride.grouppay.Controllers;
 
 import com.dylankilbride.grouppay.Models.GroupAccount;
+import com.dylankilbride.grouppay.Models.Transaction;
 import com.dylankilbride.grouppay.Models.User;
 import com.dylankilbride.grouppay.Services.GroupAccountService;
+import com.dylankilbride.grouppay.Services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ public class GroupAccountController {
 
 	@Autowired
 	GroupAccountService groupAccountService;
+	@Autowired
+	TransactionService transactionService;
 
 	@RequestMapping(value = "/createBasicAccount",
 					method = RequestMethod.PUT,
@@ -57,5 +61,13 @@ public class GroupAccountController {
 	@ResponseBody
 	public List<User> getAllContactsWithGrouppayAccounts(@RequestBody List<String> usersContactsPhoneNumbers) {
 		return groupAccountService.getAllContactsWithGrouppayAccounts(usersContactsPhoneNumbers);
+	}
+
+	@RequestMapping(value = "/getGroupTransactions/{groupAccountId}",
+						method = RequestMethod.GET,
+						produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<Transaction> getTransactionsForGroupAccount(@PathVariable(name = "groupAccountId") long groupAccountId) {
+		return transactionService.getTransactionsForGroupAccount(groupAccountId);
 	}
 }

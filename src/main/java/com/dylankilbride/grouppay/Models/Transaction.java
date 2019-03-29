@@ -2,7 +2,9 @@ package com.dylankilbride.grouppay.Models;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
@@ -20,7 +22,7 @@ public class Transaction {
 	private String paymentType;
 
 	@Column(name = "payment_date_time")
-	private LocalDateTime paymentDateAndTime;
+	private String paymentDateAndTime;
 
 	@ManyToOne
 	@JoinColumn(name = "group_id")
@@ -34,7 +36,7 @@ public class Transaction {
 	@JoinColumn(name = "bank_account")
 	private BankAccount bankAccount;
 
-	public Transaction(BigDecimal amountPaid, String paymentType, LocalDateTime paymentDateAndTime) {
+	public Transaction(BigDecimal amountPaid, String paymentType, String paymentDateAndTime) {
 		this.amountPaid = amountPaid;
 		this.paymentType = paymentType;
 		this.paymentDateAndTime = paymentDateAndTime;
@@ -60,11 +62,17 @@ public class Transaction {
 		this.paymentType = paymentType;
 	}
 
-	public LocalDateTime getPaymentDateAndTime() {
+	public String getPaymentDateAndTime() {
 		return paymentDateAndTime;
 	}
 
-	public void setPaymentDateAndTime(LocalDateTime paymentDateAndTime) {
+	public String getFormattedPaymentDateAndTime(Calendar paymentDateTime) {
+		paymentDateTime.add(Calendar.DATE, 1);
+		SimpleDateFormat format = new SimpleDateFormat("dd MMM, H:mm");
+		return format.format(paymentDateTime.getTime());
+	}
+
+	public void setPaymentDateAndTime(String paymentDateAndTime) {
 		this.paymentDateAndTime = paymentDateAndTime;
 	}
 

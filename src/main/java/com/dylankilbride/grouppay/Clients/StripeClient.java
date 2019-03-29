@@ -30,6 +30,7 @@ public class StripeClient {
 
 	public StripeChargeReceipt chargePaymentCard(String token, double amount, String userId, String groupAccountId) {
 		try {
+			//TODO Add check for valid user and group IDs
 
 			Map<String, Object> chargeParameters = new HashMap<>();
 			chargeParameters.put("amount", (int) (amount * 100));
@@ -72,13 +73,12 @@ public class StripeClient {
 							"999",
 							"Exception!",
 							"Exception was caught by server");
-//		} catch (Exception e) {
-//			System.out.println(e.fillInStackTrace());
-//			return new StripeChargeReceipt(0L,
-//							"999",
-//							"Exception!",
-//							"Exception was caught by server");
-//		}
+		} catch (Exception e) {
+			System.out.println(e.fillInStackTrace());
+			return new StripeChargeReceipt(0L,
+							"999",
+							"Exception!",
+							"Exception was caught by server");
 		}
 	}
 }
