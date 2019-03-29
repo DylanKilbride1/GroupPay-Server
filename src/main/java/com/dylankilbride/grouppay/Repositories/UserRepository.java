@@ -1,6 +1,6 @@
-package com.dylankilbride.grouppay.repositories;
+package com.dylankilbride.grouppay.Repositories;
 
-import com.dylankilbride.grouppay.models.User;
+import com.dylankilbride.grouppay.Models.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepository extends CrudRepository<User, Integer> { //JPA or CRUD repo?

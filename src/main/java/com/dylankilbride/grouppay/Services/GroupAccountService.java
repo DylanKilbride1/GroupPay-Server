@@ -1,16 +1,14 @@
-package com.dylankilbride.grouppay.services;
+package com.dylankilbride.grouppay.Services;
 
-import com.dylankilbride.grouppay.models.Contact;
-import com.dylankilbride.grouppay.models.GroupAccount;
-import com.dylankilbride.grouppay.models.User;
-import com.dylankilbride.grouppay.repositories.GroupAccountRepository;
-import com.dylankilbride.grouppay.repositories.UserRepository;
+import com.dylankilbride.grouppay.Models.GroupAccount;
+import com.dylankilbride.grouppay.Models.User;
+import com.dylankilbride.grouppay.Repositories.GroupAccountRepository;
+import com.dylankilbride.grouppay.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service

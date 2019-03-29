@@ -1,10 +1,7 @@
-package com.dylankilbride.grouppay.models;
+package com.dylankilbride.grouppay.Models;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -109,6 +106,10 @@ public class GroupAccount {
 
 	public BigDecimal getTotalAmountPaid() {
 		return totalAmountPaid;
+	}
+
+	public void updateAmountPaid(BigDecimal amountPaid) {
+		setTotalAmountPaid(totalAmountPaid.add(amountPaid));
 	}
 
 	public void setTotalAmountPaid(BigDecimal totalAmountPaid) {

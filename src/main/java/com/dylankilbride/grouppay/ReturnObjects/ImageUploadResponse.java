@@ -1,4 +1,4 @@
-package com.dylankilbride.grouppay.returnobjects;
+package com.dylankilbride.grouppay.ReturnObjects;
 
 public class ImageUploadResponse {
 

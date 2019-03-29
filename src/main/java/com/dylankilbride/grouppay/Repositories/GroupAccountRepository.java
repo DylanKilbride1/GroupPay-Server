@@ -1,12 +1,10 @@
-package com.dylankilbride.grouppay.repositories;
+package com.dylankilbride.grouppay.Repositories;
 
-import com.dylankilbride.grouppay.models.GroupAccount;
-import com.dylankilbride.grouppay.models.User;
+import com.dylankilbride.grouppay.Models.GroupAccount;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.math.BigInteger;
 import java.util.List;
