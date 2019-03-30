@@ -1,5 +1,6 @@
 package com.dylankilbride.grouppay.Models;
 
+import com.stripe.model.Customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -48,6 +49,11 @@ public class User {
 					joinColumns = {@JoinColumn(name = "groupAccount_id")},
 					inverseJoinColumns = {@JoinColumn(name = "user_id")})
 	private List<GroupAccount> groupAccounts = new ArrayList<>();
+
+	@OneToOne(fetch = FetchType.EAGER,
+					cascade = CascadeType.ALL)
+	@JoinColumn(name = "id")
+	private Customer stripeCustomer;
 
 	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber) {
 		this.firstName = firstName;
@@ -122,5 +128,13 @@ public class User {
 
 	public void setProfileImage(ProfileImage profileImage) {
 		this.profileImage = profileImage;
+	}
+
+	public Customer getStripeCustomer() {
+		return stripeCustomer;
+	}
+
+	public void setStripeCustomer(Customer stripeCustomer) {
+		this.stripeCustomer = stripeCustomer;
 	}
 }
