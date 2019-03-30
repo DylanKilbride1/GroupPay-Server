@@ -1,5 +1,7 @@
 package com.dylankilbride.grouppay.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public class User {
 	@Column(name = "email_address")
 	private String emailAddress;
 
+	@JsonIgnore
 	@Column(name = "password")
 	private String password;
 

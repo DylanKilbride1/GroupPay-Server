@@ -37,6 +37,10 @@ public class TransactionService {
 		return transactionRepository.findTransactionByGroupAccount(groupAccountRepository.findByGroupAccountId(groupAccountId));
 	}
 
+	public List<Transaction> getUserTransactionHistory(long userId) {
+		return transactionRepository.findTransactionByUser(userRepository.findUsersById(userId));
+	}
+
 	private BigDecimal convertDoubleToBigDecimal(double amount){
 		return BigDecimal.valueOf(amount);
 	}
