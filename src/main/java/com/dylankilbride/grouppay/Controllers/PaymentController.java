@@ -24,7 +24,19 @@ public class PaymentController {
 					consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public StripeChargeReceipt chargeCard(@RequestBody StripeCharge stripeCharge) throws Exception {
-		return this.stripeClient.chargePaymentCard(stripeCharge.getTokenId(),
+		return this.stripeClient.chargePaymentCardAndDontSave(stripeCharge.getTokenId(),
+						stripeCharge.getAmount(),
+						stripeCharge.getUserId(),
+						stripeCharge.getGroupAccountId());
+	}
+
+	@RequestMapping(value = "/charge/save",
+					method = RequestMethod.POST,
+					produces = MediaType.APPLICATION_JSON_VALUE,
+					consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public StripeChargeReceipt chargeCardAndSave(@RequestBody StripeCharge stripeCharge) throws Exception {
+		return this.stripeClient.chargePaymentCardAndSave(stripeCharge.getTokenId(),
 						stripeCharge.getAmount(),
 						stripeCharge.getUserId(),
 						stripeCharge.getGroupAccountId());

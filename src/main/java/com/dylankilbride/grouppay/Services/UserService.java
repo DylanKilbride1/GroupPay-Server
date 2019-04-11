@@ -6,10 +6,14 @@ import com.dylankilbride.grouppay.Repositories.ProfileImageRepository;
 import com.dylankilbride.grouppay.Repositories.UserRepository;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
+import com.stripe.exception.*;
+import com.stripe.model.Card;
+import com.stripe.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -37,6 +41,7 @@ public class UserService {
 							user.get("password"),
 							user.get("mobile_number"));
 			userToBeRegistered.setProfileImage(profileImageRepository.findProfileImageByImageId(1)); //1 is the id of the standard avatar img
+			userToBeRegistered.setStripeCustomerId("");
 			userRepository.save(userToBeRegistered);
 			resultMap.put("result", "registered");
 			return resultMap;
@@ -193,5 +198,31 @@ public class UserService {
 			imageUrl = noProfileImage;
 		}
 		return imageUrl;
+	}
+
+	public String getUsersPaymentMethods(String userId) {
+		long id = Long.valueOf(userId);
+		User user = userRepository.findUsersById(id);
+		try {
+			if(user.getStripeCustomerId().equals("")) {
+				return "0";
+			} else {
+				Map<String, Object> cardParams = new HashMap<String, Object>();
+				cardParams.put("limit", user.getNumberOfPaymentMethods());
+				cardParams.put("object", "card");
+				return Customer.retrieve(user.getStripeCustomerId()).getSources().list(cardParams).toJson();
+			}
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+		} catch (InvalidRequestException e) {
+			e.printStackTrace();
+		} catch (APIConnectionException e) {
+			e.printStackTrace();
+		} catch (CardException e) {
+			e.printStackTrace();
+		} catch (APIException e) {
+			e.printStackTrace();
+		}
+		return "no_payment_details";
 	}
 }

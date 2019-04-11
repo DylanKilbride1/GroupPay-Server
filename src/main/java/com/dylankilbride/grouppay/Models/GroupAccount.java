@@ -33,7 +33,8 @@ public class GroupAccount {
 	@OneToMany(mappedBy = "groupAccount")
 	private Set<Transaction> transaction;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER,
+					cascade = CascadeType.ALL)
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
 

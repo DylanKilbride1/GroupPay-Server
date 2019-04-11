@@ -97,4 +97,11 @@ public class UserController {
 		return true;
 	}
 
+	@RequestMapping(value = "user/getAllPaymentMethods/{userId}",
+					method = RequestMethod.GET,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String getAllPaymentDetails(@PathVariable("userId") String userId) {
+		return userService.getUsersPaymentMethods(userId);
+	}
 }
