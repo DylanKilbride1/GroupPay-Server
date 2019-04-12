@@ -1,5 +1,6 @@
 package com.dylankilbride.grouppay.Services;
 
+import com.dylankilbride.grouppay.Models.PaymentDetails;
 import com.dylankilbride.grouppay.Models.ProfileImage;
 import com.dylankilbride.grouppay.Models.User;
 import com.dylankilbride.grouppay.Repositories.ProfileImageRepository;

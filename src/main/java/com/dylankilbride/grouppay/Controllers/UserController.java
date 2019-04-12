@@ -6,6 +6,7 @@ import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
 import com.dylankilbride.grouppay.Services.S3ImageManagerService;
 import com.dylankilbride.grouppay.Services.UserService;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

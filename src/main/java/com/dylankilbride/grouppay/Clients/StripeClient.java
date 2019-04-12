@@ -90,6 +90,8 @@ public class StripeClient {
 	public StripeChargeReceipt chargePaymentCardAndSave(String token, double amount, String userId, String groupAccountId) {
 		if(createStripeCustomer(token, userId).equals("success")){
 			return chargeStripeCustomer(token, amount, groupAccountId);
+		} else if (createStripeCustomer(token, userId).equals("already registered")) {
+			return chargeStripeCustomer(userId, amount, groupAccountId);
 		} else {
 			return new StripeChargeReceipt(0L,
 							"999",
