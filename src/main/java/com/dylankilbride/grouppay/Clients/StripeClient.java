@@ -33,7 +33,7 @@ public class StripeClient {
 	@Autowired
 	private UserRepository userRepository;
 
-	public StripeChargeReceipt chargePaymentCard(String token, double amount, String userId, String groupAccountId) {
+	public StripeChargeReceipt chargePaymentCardAndDontSave(String token, double amount, String userId, String groupAccountId) {
 		try {
 			//TODO Add check for valid user and group IDs
 
@@ -87,19 +87,34 @@ public class StripeClient {
 		}
 	}
 
+	public StripeChargeReceipt chargePaymentCardAndSave(String token, double amount, String userId, String groupAccountId) {
+		if(createStripeCustomer(token, userId).equals("success")){
+			return chargeStripeCustomer(token, amount, groupAccountId);
+		} else if (createStripeCustomer(token, userId).equals("already registered")) {
+			return chargeStripeCustomer(userId, amount, groupAccountId);
+		} else {
+			return new StripeChargeReceipt(0L,
+							"999",
+							"Exception!",
+							"Exception was caught by server");
+		}
+	}
+
 	public String createStripeCustomer(String token, String userId){
 		User user = userRepository.findUsersById(Long.valueOf(userId));
 		Map<String, Object> customerParams = new HashMap<>();
 		customerParams.put("source", token);
 		customerParams.put("email", user.getEmailAddress());
 		try {
-			if(user.getStripeCustomer() == null) {
+			if((user.getStripeCustomerId() == null) || user.getStripeCustomerId().equals("")) {
 				Customer customer = Customer.create(customerParams);
-				user.setStripeCustomer(customer);
+				user.setStripeCustomerId(customer.getId());//TODO check for customer creation failure before this
+				user.addPaymentMethod();
+				userRepository.save(user);
 				return "success";
 			}
 			else {
-				return "success";
+				return "already registered";
 			}
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
@@ -122,9 +137,9 @@ public class StripeClient {
 	public StripeChargeReceipt chargeStripeCustomer(String userId, double amount, String groupAccountId) {
 		User user = userRepository.findUsersById(Long.valueOf(userId));
 		Map<String, Object> customerParams = new HashMap<>();
-		customerParams.put("amount", amount);
+		customerParams.put("amount", (int) (amount * 100));
 		customerParams.put("currency", "eur");
-		customerParams.put("customer", user.getStripeCustomer().getId());
+		customerParams.put("customer", user.getStripeCustomerId());
 		try {
 			Charge charge = Charge.create(customerParams);
 

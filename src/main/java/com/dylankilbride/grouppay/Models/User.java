@@ -50,10 +50,11 @@ public class User {
 					inverseJoinColumns = {@JoinColumn(name = "user_id")})
 	private List<GroupAccount> groupAccounts = new ArrayList<>();
 
-	@OneToOne(fetch = FetchType.EAGER,
-					cascade = CascadeType.ALL)
-	@JoinColumn(name = "id")
-	private Customer stripeCustomer;
+	@Column(name = "stripe_customer_id")
+	private String stripeCustomer;
+
+	@JsonIgnore
+	private int numberOfPaymentMethods;
 
 	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber) {
 		this.firstName = firstName;
@@ -130,11 +131,23 @@ public class User {
 		this.profileImage = profileImage;
 	}
 
-	public Customer getStripeCustomer() {
+	public String getStripeCustomerId() {
 		return stripeCustomer;
 	}
 
-	public void setStripeCustomer(Customer stripeCustomer) {
+	public void setStripeCustomerId(String stripeCustomer) {
 		this.stripeCustomer = stripeCustomer;
+	}
+
+	public int getNumberOfPaymentMethods() {
+		return numberOfPaymentMethods;
+	}
+
+	public void addPaymentMethod() {
+		numberOfPaymentMethods++;
+	}
+
+	public void removePaymentMethod() {
+		numberOfPaymentMethods--;
 	}
 }

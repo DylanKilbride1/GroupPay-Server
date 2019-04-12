@@ -6,6 +6,7 @@ import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
 import com.dylankilbride.grouppay.Services.S3ImageManagerService;
 import com.dylankilbride.grouppay.Services.UserService;
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -97,4 +98,11 @@ public class UserController {
 		return true;
 	}
 
+	@RequestMapping(value = "user/getAllPaymentMethods/{userId}",
+					method = RequestMethod.GET,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String getAllPaymentDetails(@PathVariable("userId") String userId) {
+		return userService.getUsersPaymentMethods(userId);
+	}
 }
