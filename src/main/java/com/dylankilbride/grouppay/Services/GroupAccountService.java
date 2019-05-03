@@ -30,6 +30,7 @@ public class GroupAccountService {
 	public GroupAccount createBasicGroupAccount(GroupAccount groupAccount) {
 		User groupAdmin = userRepository.findUsersById(groupAccount.getAdminId());
 		groupAccount.incrementGroupMembers();
+		groupAccount.setGroupImage(groupImageRepository.findGroupImageByGroupImageId(1));
 		groupAccountRepository.save(groupAccount);
 		groupAccountRepository.addUsersToGroupAccount(groupAccount.getGroupAccountId(), groupAdmin.getId());
 		return groupAccount;
@@ -85,6 +86,17 @@ public class GroupAccountService {
 			groupAccountRepository.save(foundGroup);
 		}
 		return new ImageUploadResponse("success", fileUrl);
+	}
+
+	public List<User> getGroupParticipants(String groupAccountId) {
+		long id = Long.valueOf(groupAccountId);
+
+		List<BigInteger> participantsIds = groupAccountRepository.findAllUsersInGroup(id);
+		List<User> participants = new ArrayList<>();
+		for (int i = 0; i < participantsIds.size(); i++) {
+			participants.add(userRepository.findUsersById(participantsIds.get(i).intValue()));
+		}
+		return participants;
 	}
 
 	public String parseContactPhoneNumber(String phoneNumber) {
