@@ -34,7 +34,8 @@ public class GroupAccount {
 	private Set<Transaction> transaction;
 
 	@OneToOne(fetch = FetchType.EAGER,
-					cascade = CascadeType.ALL)
+					cascade = CascadeType.ALL,
+					orphanRemoval = false)
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
 
@@ -132,5 +133,9 @@ public class GroupAccount {
 
 	public void incrementGroupMembers() {
 		numberOfMembers++;
+	}
+
+	public void decrementGroupMembers() {
+		numberOfMembers--;
 	}
 }

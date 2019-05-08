@@ -25,4 +25,17 @@ public interface GroupAccountRepository extends CrudRepository<GroupAccount, Int
  @Query(value = "SELECT user_id FROM group_account_users WHERE group_account_id = ?1", nativeQuery = true)
  List<BigInteger> findAllUsersInGroup(long accountId);
 
+ @Transactional
+ @Modifying
+ @Query(value = "DELETE FROM group_account_users WHERE group_account_id = ?1 AND user_id = ?2", nativeQuery = true)
+ int deleteGroupParticipant(long groupId, long userId);
+
+ @Query(value = "SELECT user_id FROM group_account_users WHERE group_account_id = ?1", nativeQuery = true)
+ List<BigInteger> findAllGroupParticipantIds(long groupId);
+
+// @Transactional
+// @Modifying
+// @Query(value = "DELETE group_account_id, user_id FROM group_account_users WHERE group_account_id = ?1 AND user_id = ?2", nativeQuery = true)
+// int deleteGroupAndLastParticipant(long groupId, long userId);
+
 }

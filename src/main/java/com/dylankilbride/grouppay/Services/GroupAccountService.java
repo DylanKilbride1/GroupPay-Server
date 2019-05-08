@@ -1,9 +1,6 @@
 package com.dylankilbride.grouppay.Services;
 
-import com.dylankilbride.grouppay.Models.GroupAccount;
-import com.dylankilbride.grouppay.Models.GroupImage;
-import com.dylankilbride.grouppay.Models.ProfileImage;
-import com.dylankilbride.grouppay.Models.User;
+import com.dylankilbride.grouppay.Models.*;
 import com.dylankilbride.grouppay.Repositories.GroupAccountRepository;
 import com.dylankilbride.grouppay.Repositories.GroupImageRepository;
 import com.dylankilbride.grouppay.Repositories.UserRepository;
@@ -97,6 +94,44 @@ public class GroupAccountService {
 			participants.add(userRepository.findUsersById(participantsIds.get(i).intValue()));
 		}
 		return participants;
+	}
+
+	public DeletionSuccess deleteGroupParticipant(String groupAccountId, String userId) {
+		long uId = Long.valueOf(userId);
+		long gId = Long.valueOf(groupAccountId);
+		GroupAccount groupToModify = groupAccountRepository.findByGroupAccountId(gId);
+		long adminId = groupToModify.getAdminId();
+
+		if(adminId == uId) {
+			return updateGroupAdmin(groupToModify, gId, uId);
+		} else {
+			if (groupAccountRepository.deleteGroupParticipant(gId, uId) == 1) {
+				groupToModify.decrementGroupMembers();
+				groupAccountRepository.save(groupToModify);
+				return new DeletionSuccess(true, false);
+			}
+			else {
+				return new DeletionSuccess(false, false);
+			}
+		}
+	}
+
+	private DeletionSuccess updateGroupAdmin(GroupAccount group, long gId, long uId) {
+		List<BigInteger> groupParticipantIds = groupAccountRepository.findAllGroupParticipantIds(gId);
+		if (group.getNumberOfMembers() == 1) {
+			groupAccountRepository.delete(group);
+			groupAccountRepository.deleteGroupParticipant(gId, uId);
+			return new DeletionSuccess(false, true);
+		} else {
+			if (groupParticipantIds.get(0).intValue() == uId) {
+				group.setAdminId(groupParticipantIds.get(1).intValue());
+				groupAccountRepository.save(group);
+			} else {
+				group.setAdminId(groupParticipantIds.get(0).intValue());
+				groupAccountRepository.save(group);
+			}
+			return new DeletionSuccess(true, false);
+		}
 	}
 
 	public String parseContactPhoneNumber(String phoneNumber) {
