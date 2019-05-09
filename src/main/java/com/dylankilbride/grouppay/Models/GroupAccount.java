@@ -34,8 +34,7 @@ public class GroupAccount {
 	private Set<Transaction> transaction;
 
 	@OneToOne(fetch = FetchType.EAGER,
-					cascade = CascadeType.ALL,
-					orphanRemoval = false)
+					cascade = CascadeType.ALL)
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
 

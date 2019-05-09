@@ -27,7 +27,7 @@ public class GroupAccountService {
 	public GroupAccount createBasicGroupAccount(GroupAccount groupAccount) {
 		User groupAdmin = userRepository.findUsersById(groupAccount.getAdminId());
 		groupAccount.incrementGroupMembers();
-		groupAccount.setGroupImage(groupImageRepository.findGroupImageByGroupImageId(1));
+		groupAccount.setGroupImage(new GroupImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_group_icon.png"));
 		groupAccountRepository.save(groupAccount);
 		groupAccountRepository.addUsersToGroupAccount(groupAccount.getGroupAccountId(), groupAdmin.getId());
 		return groupAccount;
@@ -103,7 +103,7 @@ public class GroupAccountService {
 		long adminId = groupToModify.getAdminId();
 
 		if(adminId == uId) {
-			return updateGroupAdmin(groupToModify, gId, uId);
+			return updateGroupAdminAndDelete(groupToModify, gId, uId);
 		} else {
 			if (groupAccountRepository.deleteGroupParticipant(gId, uId) == 1) {
 				groupToModify.decrementGroupMembers();
@@ -116,7 +116,7 @@ public class GroupAccountService {
 		}
 	}
 
-	private DeletionSuccess updateGroupAdmin(GroupAccount group, long gId, long uId) {
+	private DeletionSuccess updateGroupAdminAndDelete(GroupAccount group, long gId, long uId) {
 		List<BigInteger> groupParticipantIds = groupAccountRepository.findAllGroupParticipantIds(gId);
 		if (group.getNumberOfMembers() == 1) {
 			groupAccountRepository.delete(group);
@@ -125,10 +125,14 @@ public class GroupAccountService {
 		} else {
 			if (groupParticipantIds.get(0).intValue() == uId) {
 				group.setAdminId(groupParticipantIds.get(1).intValue());
+				group.decrementGroupMembers();
 				groupAccountRepository.save(group);
+				groupAccountRepository.deleteGroupParticipant(gId, uId);
 			} else {
 				group.setAdminId(groupParticipantIds.get(0).intValue());
+				group.decrementGroupMembers();
 				groupAccountRepository.save(group);
+				groupAccountRepository.deleteGroupParticipant(gId, uId);
 			}
 			return new DeletionSuccess(true, false);
 		}
