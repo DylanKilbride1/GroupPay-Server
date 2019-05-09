@@ -1,5 +1,6 @@
 package com.dylankilbride.grouppay.Controllers;
 
+import com.dylankilbride.grouppay.Models.DeletionSuccess;
 import com.dylankilbride.grouppay.Models.GroupAccount;
 import com.dylankilbride.grouppay.Models.Transaction;
 import com.dylankilbride.grouppay.Models.User;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
@@ -80,10 +82,28 @@ public class GroupAccountController {
 					method = RequestMethod.POST,
 					consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseBody
-	public ImageUploadResponse uploadUsersProfileImage(@PathVariable("groupAccountId") String groupAccountId,
+	public ImageUploadResponse uploadGroupProfileImage(@PathVariable("groupAccountId") String groupAccountId,
 	                                                   @RequestPart MultipartFile file,
 	                                                   @RequestPart("name") String body) {
 		return groupAccountService.saveGroupProfilePhoto(groupAccountId,
 						s3ImageManagerService.uploadFile(file).getFileUrl());
 	}
+
+	@RequestMapping(value = "/getAllUsersInGroup/{groupAccountId}",
+					method = RequestMethod.GET,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<User> getGroupParticipants(@PathVariable("groupAccountId") String groupAccountId) {
+		return groupAccountService.getGroupParticipants(groupAccountId);
+	}
+
+	@RequestMapping(value = "/deleteUserFromGroup/{groupAccountId}/{userId}",
+					method = RequestMethod.DELETE,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public DeletionSuccess deleteParticipantFromGroup(@PathVariable("groupAccountId") String groupAccountId,
+	                                                  @PathVariable("userId") String userId) {
+		return groupAccountService.deleteGroupParticipant(groupAccountId, userId);
+	}
+
 }

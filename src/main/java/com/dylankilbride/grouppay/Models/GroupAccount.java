@@ -133,4 +133,8 @@ public class GroupAccount {
 	public void incrementGroupMembers() {
 		numberOfMembers++;
 	}
+
+	public void decrementGroupMembers() {
+		numberOfMembers--;
+	}
 }

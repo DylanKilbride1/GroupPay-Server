@@ -1,6 +1,7 @@
 package com.dylankilbride.grouppay.Repositories;
 
 import com.dylankilbride.grouppay.Models.GroupAccount;
+import com.dylankilbride.grouppay.Models.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -20,4 +21,21 @@ public interface GroupAccountRepository extends CrudRepository<GroupAccount, Int
  @Modifying
  @Query(value = "INSERT INTO group_account_users (group_account_id, user_id) VALUES (?1, ?2)", nativeQuery = true)
  int addUsersToGroupAccount(long accountId, long userId);
+
+ @Query(value = "SELECT user_id FROM group_account_users WHERE group_account_id = ?1", nativeQuery = true)
+ List<BigInteger> findAllUsersInGroup(long accountId);
+
+ @Transactional
+ @Modifying
+ @Query(value = "DELETE FROM group_account_users WHERE group_account_id = ?1 AND user_id = ?2", nativeQuery = true)
+ int deleteGroupParticipant(long groupId, long userId);
+
+ @Query(value = "SELECT user_id FROM group_account_users WHERE group_account_id = ?1", nativeQuery = true)
+ List<BigInteger> findAllGroupParticipantIds(long groupId);
+
+// @Transactional
+// @Modifying
+// @Query(value = "DELETE group_account_id, user_id FROM group_account_users WHERE group_account_id = ?1 AND user_id = ?2", nativeQuery = true)
+// int deleteGroupAndLastParticipant(long groupId, long userId);
+
 }

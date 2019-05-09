@@ -1,9 +1,6 @@
 package com.dylankilbride.grouppay.Services;
 
-import com.dylankilbride.grouppay.Models.GroupAccount;
-import com.dylankilbride.grouppay.Models.GroupImage;
-import com.dylankilbride.grouppay.Models.ProfileImage;
-import com.dylankilbride.grouppay.Models.User;
+import com.dylankilbride.grouppay.Models.*;
 import com.dylankilbride.grouppay.Repositories.GroupAccountRepository;
 import com.dylankilbride.grouppay.Repositories.GroupImageRepository;
 import com.dylankilbride.grouppay.Repositories.UserRepository;
@@ -30,6 +27,7 @@ public class GroupAccountService {
 	public GroupAccount createBasicGroupAccount(GroupAccount groupAccount) {
 		User groupAdmin = userRepository.findUsersById(groupAccount.getAdminId());
 		groupAccount.incrementGroupMembers();
+		groupAccount.setGroupImage(new GroupImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_group_icon.png"));
 		groupAccountRepository.save(groupAccount);
 		groupAccountRepository.addUsersToGroupAccount(groupAccount.getGroupAccountId(), groupAdmin.getId());
 		return groupAccount;
@@ -85,6 +83,59 @@ public class GroupAccountService {
 			groupAccountRepository.save(foundGroup);
 		}
 		return new ImageUploadResponse("success", fileUrl);
+	}
+
+	public List<User> getGroupParticipants(String groupAccountId) {
+		long id = Long.valueOf(groupAccountId);
+
+		List<BigInteger> participantsIds = groupAccountRepository.findAllUsersInGroup(id);
+		List<User> participants = new ArrayList<>();
+		for (int i = 0; i < participantsIds.size(); i++) {
+			participants.add(userRepository.findUsersById(participantsIds.get(i).intValue()));
+		}
+		return participants;
+	}
+
+	public DeletionSuccess deleteGroupParticipant(String groupAccountId, String userId) {
+		long uId = Long.valueOf(userId);
+		long gId = Long.valueOf(groupAccountId);
+		GroupAccount groupToModify = groupAccountRepository.findByGroupAccountId(gId);
+		long adminId = groupToModify.getAdminId();
+
+		if(adminId == uId) {
+			return updateGroupAdminAndDelete(groupToModify, gId, uId);
+		} else {
+			if (groupAccountRepository.deleteGroupParticipant(gId, uId) == 1) {
+				groupToModify.decrementGroupMembers();
+				groupAccountRepository.save(groupToModify);
+				return new DeletionSuccess(true, false);
+			}
+			else {
+				return new DeletionSuccess(false, false);
+			}
+		}
+	}
+
+	private DeletionSuccess updateGroupAdminAndDelete(GroupAccount group, long gId, long uId) {
+		List<BigInteger> groupParticipantIds = groupAccountRepository.findAllGroupParticipantIds(gId);
+		if (group.getNumberOfMembers() == 1) {
+			groupAccountRepository.delete(group);
+			groupAccountRepository.deleteGroupParticipant(gId, uId);
+			return new DeletionSuccess(false, true);
+		} else {
+			if (groupParticipantIds.get(0).intValue() == uId) {
+				group.setAdminId(groupParticipantIds.get(1).intValue());
+				group.decrementGroupMembers();
+				groupAccountRepository.save(group);
+				groupAccountRepository.deleteGroupParticipant(gId, uId);
+			} else {
+				group.setAdminId(groupParticipantIds.get(0).intValue());
+				group.decrementGroupMembers();
+				groupAccountRepository.save(group);
+				groupAccountRepository.deleteGroupParticipant(gId, uId);
+			}
+			return new DeletionSuccess(true, false);
+		}
 	}
 
 	public String parseContactPhoneNumber(String phoneNumber) {
