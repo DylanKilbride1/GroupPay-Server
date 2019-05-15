@@ -1,19 +1,18 @@
 package com.dylankilbride.grouppay.Controllers;
 
-import com.dylankilbride.grouppay.Models.DeletionSuccess;
-import com.dylankilbride.grouppay.Models.GroupAccount;
-import com.dylankilbride.grouppay.Models.Transaction;
-import com.dylankilbride.grouppay.Models.User;
+import com.dylankilbride.grouppay.Models.*;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.Services.GroupAccountService;
 import com.dylankilbride.grouppay.Services.S3ImageManagerService;
 import com.dylankilbride.grouppay.Services.TransactionService;
+import com.dylankilbride.grouppay.Services.VirtualCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.attribute.standard.Media;
+import java.text.ParseException;
 import java.util.List;
 
 @RestController
@@ -26,6 +25,8 @@ public class GroupAccountController {
 	TransactionService transactionService;
 	@Autowired
 	S3ImageManagerService s3ImageManagerService;
+	@Autowired
+	VirtualCardService virtualCardService;
 
 	@RequestMapping(value = "/createBasicAccount",
 					method = RequestMethod.POST,
@@ -106,4 +107,11 @@ public class GroupAccountController {
 		return groupAccountService.deleteGroupParticipant(groupAccountId, userId);
 	}
 
+	@RequestMapping(value = "/generateVirtualCard/{groupAccountId}",
+					method = RequestMethod.GET,
+					produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public VirtualCard generate(@PathVariable("groupAccountId") String groupAccountId) throws ParseException {
+		return virtualCardService.generateRandomVirtualCardDetails(groupAccountId);
+	}
 }

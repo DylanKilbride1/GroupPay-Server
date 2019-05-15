@@ -38,6 +38,11 @@ public class GroupAccount {
 	@JoinColumn(name = "group_image")
 	private GroupImage groupImage;
 
+	@OneToOne(fetch = FetchType.EAGER,
+					cascade = CascadeType.ALL)
+	@JoinColumn(name = "virtual_card_id")
+	private VirtualCard virtualCard;
+
 	public GroupAccount(long adminId, String accountName, String accountDescription, BigDecimal totalAmountOwed, BigDecimal totalAmountPaid) {
 		this.adminId = adminId;
 		this.accountName = accountName;
@@ -129,6 +134,14 @@ public class GroupAccount {
 //		groupMembers.add(user); //TODO This returns false but increments set size.. Why are users not being reflected in DB?
 //		incrementGroupMembers ();
 //	}
+
+	public VirtualCard getVirtualCard() {
+		return virtualCard;
+	}
+
+	public void setVirtualCard(VirtualCard virtualCard) {
+		this.virtualCard = virtualCard;
+	}
 
 	public void incrementGroupMembers() {
 		numberOfMembers++;
