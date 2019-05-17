@@ -25,7 +25,8 @@ public class PaymentController {
 	@ResponseBody
 	public StripeChargeReceipt chargeCard(@RequestBody StripeCharge stripeCharge) throws Exception {
 		return this.stripeClient.chargePaymentCardAndDontSave(stripeCharge.getTokenId(),
-						stripeCharge.getAmount(),
+						stripeCharge.getAmountInclFees(),
+						stripeCharge.getAmountForGroup(),
 						stripeCharge.getUserId(),
 						stripeCharge.getGroupAccountId());
 	}
@@ -37,7 +38,8 @@ public class PaymentController {
 	@ResponseBody
 	public StripeChargeReceipt chargeCardAndSave(@RequestBody StripeCharge stripeCharge) throws Exception {
 		return this.stripeClient.chargePaymentCardAndSave(stripeCharge.getTokenId(),
-						stripeCharge.getAmount(),
+						stripeCharge.getAmountInclFees(),
+						stripeCharge.getAmountForGroup(),
 						stripeCharge.getUserId(),
 						stripeCharge.getGroupAccountId());
 	}

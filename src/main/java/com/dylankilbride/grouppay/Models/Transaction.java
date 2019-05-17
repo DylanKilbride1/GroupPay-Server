@@ -15,8 +15,11 @@ public class Transaction {
 	@Column(name = "transaction_id")
 	private long transactionId;
 
-	@Column(name = "amount_paid")
-	private BigDecimal amountPaid;
+	@Column(name = "amount_paid_to_group")
+	private BigDecimal amountPaidToGroup;
+
+	@Column(name = "transaction_fee")
+	private BigDecimal transactionFee;
 
 	@Column(name = "paymentType")
 	private String paymentType;
@@ -37,9 +40,16 @@ public class Transaction {
 	private BankAccount bankAccount;
 
 	public Transaction(BigDecimal amountPaid, String paymentType, String paymentDateAndTime) {
-		this.amountPaid = amountPaid;
+		this.amountPaidToGroup = amountPaid;
 		this.paymentType = paymentType;
 		this.paymentDateAndTime = paymentDateAndTime;
+	}
+
+	public Transaction(BigDecimal amountPaid, BigDecimal fee, String paymentType, String paymentDateAndTime) {
+		this.amountPaidToGroup = amountPaid;
+		this.paymentType = paymentType;
+		this.paymentDateAndTime = paymentDateAndTime;
+		this.transactionFee = fee;
 	}
 
 	public Transaction(){
@@ -47,11 +57,11 @@ public class Transaction {
 	}
 
 	public BigDecimal getAmountPaid() {
-		return amountPaid;
+		return amountPaidToGroup;
 	}
 
 	public void setAmountPaid(BigDecimal amountPaid) {
-		this.amountPaid = amountPaid;
+		this.amountPaidToGroup = amountPaid;
 	}
 
 	public String getPaymentType() {
@@ -98,5 +108,13 @@ public class Transaction {
 
 	public BankAccount getBankAccount() {
 		return bankAccount;
+	}
+
+	public BigDecimal getTransactionFee() {
+		return transactionFee;
+	}
+
+	public void setTransactionFee(BigDecimal transactionFee) {
+		this.transactionFee = transactionFee;
 	}
 }

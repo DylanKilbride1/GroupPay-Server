@@ -24,8 +24,9 @@ public class TransactionService {
 	@Autowired
 	TransactionRepository transactionRepository;
 
-	public void createIncomingPaymentTransactionRecord(String userId, String groupId, double amount) {
-		Transaction newIncomingTransactionPaymentRecord = new Transaction(convertDoubleToBigDecimal(amount),
+	public void createIncomingPaymentTransactionRecord(String userId, String groupId, double amountToDebit, double amountForGroup) {
+		Transaction newIncomingTransactionPaymentRecord = new Transaction(convertDoubleToBigDecimal(amountForGroup),
+						calculateGroupPayFees(convertDoubleToBigDecimal(amountForGroup), convertDoubleToBigDecimal(amountToDebit)),
 						"Incoming",
 						getFormattedPaymentDateAndTime(Calendar.getInstance()));
 		newIncomingTransactionPaymentRecord.setUser(userRepository.findUsersById(Long.valueOf(userId)));
@@ -49,5 +50,12 @@ public class TransactionService {
 		paymentDateTime.add(Calendar.DATE, 1);
 		SimpleDateFormat format = new SimpleDateFormat("dd MMM, H:mm");
 		return format.format(paymentDateTime.getTime());
+	}
+
+	public BigDecimal calculateGroupPayFees(BigDecimal amountForGroup, BigDecimal amountDebited) {
+		BigDecimal stripePercentage = new BigDecimal(1.019);
+		BigDecimal stripeFixedFee = new BigDecimal(.25);
+		BigDecimal amountPlusStripe = amountForGroup.multiply(stripePercentage).add(stripeFixedFee);
+		return amountDebited.subtract(amountPlusStripe);
 	}
 }

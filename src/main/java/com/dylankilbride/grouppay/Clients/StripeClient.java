@@ -33,19 +33,19 @@ public class StripeClient {
 	@Autowired
 	private UserRepository userRepository;
 
-	public StripeChargeReceipt chargePaymentCardAndDontSave(String token, double amount, String userId, String groupAccountId) {
+	public StripeChargeReceipt chargePaymentCardAndDontSave(String token, double amountToDebit, double amountForGroup, String userId, String groupAccountId) {
 		try {
 			//TODO Add check for valid user and group IDs
 
 			Map<String, Object> chargeParameters = new HashMap<>();
-			chargeParameters.put("amount", (int) (amount * 100));
+			chargeParameters.put("amount", (int) (amountToDebit * 100));
 			chargeParameters.put("currency", "EUR");
 			chargeParameters.put("source", token);
 			Charge charge = Charge.create(chargeParameters);
 
-			transactionService.createIncomingPaymentTransactionRecord(userId, groupAccountId, amount); //Crash if userId doesnt exist
+			transactionService.createIncomingPaymentTransactionRecord(userId, groupAccountId, amountToDebit, amountForGroup); //Crash if userId doesnt exist
 			GroupAccount accountToModify = groupAccountRepository.findByGroupAccountId(Long.valueOf(groupAccountId));
-			accountToModify.updateAmountPaid(BigDecimal.valueOf(amount));
+			accountToModify.updateAmountPaid(BigDecimal.valueOf(amountForGroup));
 			groupAccountRepository.save(accountToModify);
 
 			return new StripeChargeReceipt(charge.getAmount(),
@@ -87,11 +87,11 @@ public class StripeClient {
 		}
 	}
 
-	public StripeChargeReceipt chargePaymentCardAndSave(String token, double amount, String userId, String groupAccountId) {
+	public StripeChargeReceipt chargePaymentCardAndSave(String token, double amountToDebit, double amountForGroup, String userId, String groupAccountId) {
 		if(createStripeCustomer(token, userId).equals("success")){
-			return chargeStripeCustomer(token, amount, groupAccountId);
+			return chargeStripeCustomer(token, amountToDebit, amountForGroup, groupAccountId);
 		} else if (createStripeCustomer(token, userId).equals("already registered")) {
-			return chargeStripeCustomer(userId, amount, groupAccountId);
+			return chargeStripeCustomer(userId, amountToDebit, amountForGroup, groupAccountId);
 		} else {
 			return new StripeChargeReceipt(0L,
 							"999",
@@ -134,18 +134,18 @@ public class StripeClient {
 		}
 	}
 
-	public StripeChargeReceipt chargeStripeCustomer(String userId, double amount, String groupAccountId) {
+	public StripeChargeReceipt chargeStripeCustomer(String userId, double amountToDebit, double amountForGroup, String groupAccountId) {
 		User user = userRepository.findUsersById(Long.valueOf(userId));
 		Map<String, Object> customerParams = new HashMap<>();
-		customerParams.put("amount", (int) (amount * 100));
+		customerParams.put("amount", (int) (amountToDebit * 100));
 		customerParams.put("currency", "eur");
 		customerParams.put("customer", user.getStripeCustomerId());
 		try {
 			Charge charge = Charge.create(customerParams);
 
-			transactionService.createIncomingPaymentTransactionRecord(userId, groupAccountId, amount); //Crash if userId doesnt exist
+			transactionService.createIncomingPaymentTransactionRecord(userId, groupAccountId, amountToDebit, amountForGroup); //Crash if userId doesnt exist
 			GroupAccount accountToModify = groupAccountRepository.findByGroupAccountId(Long.valueOf(groupAccountId));
-			accountToModify.updateAmountPaid(BigDecimal.valueOf(amount));
+			accountToModify.updateAmountPaid(BigDecimal.valueOf(amountForGroup));
 			groupAccountRepository.save(accountToModify);
 
 			return new StripeChargeReceipt(charge.getAmount(),
