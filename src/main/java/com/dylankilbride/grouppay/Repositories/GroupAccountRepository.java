@@ -2,6 +2,7 @@ package com.dylankilbride.grouppay.Repositories;
 
 import com.dylankilbride.grouppay.Models.GroupAccount;
 import com.dylankilbride.grouppay.Models.User;
+import com.dylankilbride.grouppay.Models.VirtualCard;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -33,6 +34,7 @@ public interface GroupAccountRepository extends CrudRepository<GroupAccount, Int
  @Query(value = "SELECT user_id FROM group_account_users WHERE group_account_id = ?1", nativeQuery = true)
  List<BigInteger> findAllGroupParticipantIds(long groupId);
 
+ VirtualCard findByVirtualCardCardId(long cardId);
 // @Transactional
 // @Modifying
 // @Query(value = "DELETE group_account_id, user_id FROM group_account_users WHERE group_account_id = ?1 AND user_id = ?2", nativeQuery = true)

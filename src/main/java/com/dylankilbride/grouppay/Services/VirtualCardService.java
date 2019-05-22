@@ -49,9 +49,8 @@ public class VirtualCardService {
 		return newFormat.format(dateToParse.parse(LocalDate.ofEpochDay(randomExpiry).toString()));
 	}
 
-	public VirtualCard generateRandomVirtualCardDetails(String groupAccountId) throws ParseException {
-		long id = Long.valueOf(groupAccountId);
-		GroupAccount tempGroup = groupAccountRepository.findByGroupAccountId(id);
+	public VirtualCard generateRandomVirtualCardDetails(long groupAccountId) throws ParseException {
+		GroupAccount tempGroup = groupAccountRepository.findByGroupAccountId(groupAccountId);
 
 		String cvv = generateRandomCVV();
 		String expiryDate = generateRandomExpiryDate();
@@ -64,6 +63,11 @@ public class VirtualCardService {
 		groupAccountRepository.save(tempGroup);
 
 		return issuedCard;
+	}
+
+	public VirtualCard getVirtualCardDetails(String groupAccountId) {
+		GroupAccount group = groupAccountRepository.findByGroupAccountId(Long.valueOf(groupAccountId));
+		return group.getVirtualCard();
 	}
 
 

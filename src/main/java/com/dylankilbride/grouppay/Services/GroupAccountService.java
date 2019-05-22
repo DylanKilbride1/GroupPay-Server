@@ -24,12 +24,16 @@ public class GroupAccountService {
 	@Autowired
 	GroupImageRepository groupImageRepository;
 
-	public GroupAccount createBasicGroupAccount(GroupAccount groupAccount) {
+	@Autowired
+	VirtualCardService virtualCardService;
+
+	public GroupAccount createBasicGroupAccount(GroupAccount groupAccount) throws Exception{
 		User groupAdmin = userRepository.findUsersById(groupAccount.getAdminId());
 		groupAccount.incrementGroupMembers();
 		groupAccount.setGroupImage(new GroupImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_group_icon.png"));
 		groupAccountRepository.save(groupAccount);
 		groupAccountRepository.addUsersToGroupAccount(groupAccount.getGroupAccountId(), groupAdmin.getId());
+		virtualCardService.generateRandomVirtualCardDetails(groupAccount.getGroupAccountId());
 		return groupAccount;
 	}
 

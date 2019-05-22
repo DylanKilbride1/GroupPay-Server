@@ -29,6 +29,14 @@ public class VirtualCard {
 
 	}
 
+	public long getCardId() {
+		return cardId;
+	}
+
+	public void setCardId(long cardId) {
+		this.cardId = cardId;
+	}
+
 	public String getPan() {
 		return pan;
 	}

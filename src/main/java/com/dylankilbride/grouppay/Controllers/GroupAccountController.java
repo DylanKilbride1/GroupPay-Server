@@ -33,7 +33,7 @@ public class GroupAccountController {
 					produces = MediaType.APPLICATION_JSON_VALUE,
 					consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public GroupAccount createBasicGroupAccount(@RequestBody GroupAccount groupAccount) {
+	public GroupAccount createBasicGroupAccount(@RequestBody GroupAccount groupAccount) throws Exception{
 		return groupAccountService.createBasicGroupAccount(groupAccount);
 	}
 
@@ -107,11 +107,11 @@ public class GroupAccountController {
 		return groupAccountService.deleteGroupParticipant(groupAccountId, userId);
 	}
 
-	@RequestMapping(value = "/generateVirtualCard/{groupAccountId}",
+	@RequestMapping(value = "/getVirtualCardDetails/{groupAccountId}",
 					method = RequestMethod.GET,
 					produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public VirtualCard generate(@PathVariable("groupAccountId") String groupAccountId) throws ParseException {
-		return virtualCardService.generateRandomVirtualCardDetails(groupAccountId);
+	public VirtualCard getVCDetails(@PathVariable("groupAccountId") String groupAccountId) throws ParseException {
+		return virtualCardService.getVirtualCardDetails(groupAccountId);
 	}
 }

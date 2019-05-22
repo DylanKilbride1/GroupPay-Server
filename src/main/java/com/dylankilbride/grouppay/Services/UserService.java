@@ -41,7 +41,7 @@ public class UserService {
 							user.get("email_address"),
 							user.get("password"),
 							user.get("mobile_number"));
-			userToBeRegistered.setProfileImage(profileImageRepository.findProfileImageByImageId(1)); //1 is the id of the standard avatar img
+			userToBeRegistered.setProfileImage(new ProfileImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png")); //1 is the id of the standard avatar img
 			userToBeRegistered.setStripeCustomerId("");
 			userRepository.save(userToBeRegistered);
 			resultMap.put("result", "registered");
