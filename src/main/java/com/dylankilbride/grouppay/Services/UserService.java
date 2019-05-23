@@ -32,7 +32,7 @@ public class UserService {
 	private String noProfileImage = "https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no-profile-image.png";
 	private UsersProfileDetails returnUser;
 
-	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) { //Should I be returning response status?
+	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) {
 		Map<String, String> resultMap = new HashMap<>();
 		if (userRepository.existsByEmailAddress(user.get("email_address"))) {
 			resultMap.put("result", "error");
@@ -57,6 +57,10 @@ public class UserService {
 		if (userRepository.existsByEmailAddress(loginDetails.get("email"))
 						&& userRepository.existsByPassword(loginDetails.get("password"))) {
 			User user = userRepository.findUsersByEmailAddress(loginDetails.get("email"));
+			if((loginDetails.get("isVerified").equals("TRUE")) && (!user.getIsUserVerified().equals("TRUE"))) {
+				user.setIsUserVerified("TRUE");
+				userRepository.save(user);
+			}
 			resultMap.put("result", "1");
 			resultMap.put("userId", Long.toString(user.getId()));
 			resultMap.put("name", user.getFirstName() + " " + user.getLastName());

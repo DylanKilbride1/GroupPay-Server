@@ -59,6 +59,8 @@ public class User {
 	@Column(name = "device_token")
 	private String deviceToken;
 
+	private String isUserVerified = "FALSE";
+
 	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber, String deviceToken) {
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -161,5 +163,13 @@ public class User {
 
 	public void setDeviceToken(String deviceToken) {
 		this.deviceToken = deviceToken;
+	}
+
+	public String getIsUserVerified() {
+		return isUserVerified;
+	}
+
+	public void setIsUserVerified(String isUserVerified) {
+		this.isUserVerified = isUserVerified;
 	}
 }
