@@ -29,7 +29,7 @@ public class UserService {
 	private ProfileImageRepository profileImageRepository;
 	@Autowired
 	private S3ImageManagerService s3ImageManagerService;
-	private String noProfileImage = "https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no-profile-image.png";
+	private String noProfileImage = "https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png";
 	private UsersProfileDetails returnUser;
 
 	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) {
@@ -44,7 +44,7 @@ public class UserService {
 							user.get("password"),
 							user.get("mobile_number"),
 							user.get("device_token"));
-			userToBeRegistered.setProfileImage(new ProfileImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png")); //1 is the id of the standard avatar img
+			userToBeRegistered.setProfileImage(new ProfileImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png"));
 			userToBeRegistered.setStripeCustomerId("");
 			userRepository.save(userToBeRegistered);
 			resultMap.put("result", "registered");
