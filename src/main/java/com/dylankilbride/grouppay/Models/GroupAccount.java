@@ -43,9 +43,6 @@ public class GroupAccount {
 	@JoinColumn(name = "virtual_card_id")
 	private VirtualCard virtualCard;
 
-	@Column(name = "device_token")
-	private String deviceToken;
-
 	public GroupAccount(long adminId, String accountName, String accountDescription, BigDecimal totalAmountOwed, BigDecimal totalAmountPaid) {
 		this.adminId = adminId;
 		this.accountName = accountName;

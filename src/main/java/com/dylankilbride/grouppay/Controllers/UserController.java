@@ -8,7 +8,9 @@ import com.dylankilbride.grouppay.Services.S3ImageManagerService;
 import com.dylankilbride.grouppay.Services.UserService;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -104,5 +106,12 @@ public class UserController {
 	@ResponseBody
 	public String getAllPaymentDetails(@PathVariable("userId") String userId) {
 		return userService.getUsersPaymentMethods(userId);
+	}
+
+	@RequestMapping(value = "user/updateDeviceToken/{oldToken}",
+					method = RequestMethod.PATCH)
+	public ResponseEntity updateUsersDeviceToken(@PathVariable("oldToken") String oldToken,
+	                                             @RequestBody Map<String, String> deviceToken){
+		return userService.updateDeviceToken(oldToken, deviceToken.get("newToken"));
 	}
 }

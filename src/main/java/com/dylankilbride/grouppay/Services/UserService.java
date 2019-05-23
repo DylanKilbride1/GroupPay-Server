@@ -11,6 +11,8 @@ import com.stripe.exception.*;
 import com.stripe.model.Card;
 import com.stripe.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -40,7 +42,8 @@ public class UserService {
 							user.get("last_name"),
 							user.get("email_address"),
 							user.get("password"),
-							user.get("mobile_number"));
+							user.get("mobile_number"),
+							user.get("device_token"));
 			userToBeRegistered.setProfileImage(new ProfileImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png")); //1 is the id of the standard avatar img
 			userToBeRegistered.setStripeCustomerId("");
 			userRepository.save(userToBeRegistered);
@@ -57,6 +60,7 @@ public class UserService {
 			resultMap.put("result", "1");
 			resultMap.put("userId", Long.toString(user.getId()));
 			resultMap.put("name", user.getFirstName() + " " + user.getLastName());
+			resultMap.put("deviceToken", user.getDeviceToken());
 			if(user.getProfileImage() == null){
 				resultMap.put("profileImageUrl", null);
 			} else {
@@ -225,5 +229,12 @@ public class UserService {
 			e.printStackTrace();
 		}
 		return "no_payment_details";
+	}
+
+	public ResponseEntity updateDeviceToken(String oldToken, String newToken) {
+		User userToModify = userRepository.findByDeviceToken(oldToken);
+		userToModify.setDeviceToken(newToken);
+		userRepository.save(userToModify);
+		return new ResponseEntity(HttpStatus.OK);
 	}
 }
