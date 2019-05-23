@@ -56,12 +56,16 @@ public class User {
 	@JsonIgnore
 	private int numberOfPaymentMethods;
 
-	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber) {
+	@Column(name = "device_token")
+	private String deviceToken;
+
+	public User(String firstName, String lastName, String emailAddress, String password, String mobileNumber, String deviceToken) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
 		this.password = password;
 		this.mobileNumber = mobileNumber;
+		this.deviceToken = deviceToken;
 	}
 
 	public User() {
@@ -149,5 +153,13 @@ public class User {
 
 	public void removePaymentMethod() {
 		numberOfPaymentMethods--;
+	}
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
 	}
 }
