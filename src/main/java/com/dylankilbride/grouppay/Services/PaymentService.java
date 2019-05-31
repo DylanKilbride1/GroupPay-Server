@@ -85,19 +85,20 @@ public class PaymentService {
 	}
 
 	public ResponseEntity savePaymentDetails(StripeCharge customerDetails) {
-		try{
 			if(getUserById(Long.valueOf(customerDetails.getUserId())).getStripeCustomerId().equals("")) {
-				createStripeCustomer(customerDetails);
-				return new ResponseEntity(HttpStatus.OK);
+				if (createStripeCustomer(customerDetails)) {
+				  return new ResponseEntity(HttpStatus.OK);
+				} else {
+					return new ResponseEntity(HttpStatus.BAD_REQUEST);
+				}
 			} else {
-				if(addCardToStripeCustomer(Long.valueOf(customerDetails.getUserId(),
-								customerDetails.getTokenId()))) {
+				if(addCardToStripeCustomer(Long.valueOf(customerDetails.getUserId()),
+								customerDetails.getTokenId())) {
 					return new ResponseEntity(HttpStatus.OK);
+				} else {
+					return new ResponseEntity(HttpStatus.BAD_REQUEST);
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private boolean createStripeCustomer(StripeCharge customerDetails) {
@@ -110,6 +111,8 @@ public class PaymentService {
 
 			updateUsersStripeCustomerId(getUserById(Long.valueOf(customerDetails.getUserId())),
 							customer.getId());
+
+			incrementUserPaymentMethods(getUserById(Long.valueOf(customerDetails.getUserId())));
 
 			return true;
 		} catch (AuthenticationException e) {
@@ -142,6 +145,8 @@ public class PaymentService {
 			params.put("source", tokenId);
 			stripeCustomer.getSources().create(params);
 
+			incrementUserPaymentMethods(user);
+
 			return true;
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
@@ -170,6 +175,11 @@ public class PaymentService {
 
 	private void updateUsersStripeCustomerId(User user, String stripeCustomerId) {
 		user.setStripeCustomerId(stripeCustomerId);
+		userRepository.save(user);
+	}
+
+	private void incrementUserPaymentMethods(User user){
+		user.addPaymentMethod();
 		userRepository.save(user);
 	}
 }

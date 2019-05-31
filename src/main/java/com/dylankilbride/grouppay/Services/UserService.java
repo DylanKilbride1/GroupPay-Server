@@ -218,7 +218,7 @@ public class UserService {
 			if(user.getStripeCustomerId().equals("")) {
 				return "0";
 			} else {
-				Map<String, Object> cardParams = new HashMap<String, Object>();
+				Map<String, Object> cardParams = new HashMap<>();
 				cardParams.put("limit", user.getNumberOfPaymentMethods());
 				cardParams.put("object", "card");
 				return Customer.retrieve(user.getStripeCustomerId()).getSources().list(cardParams).toJson();
