@@ -3,66 +3,57 @@ package com.dylankilbride.grouppay.Services;
 import com.dylankilbride.grouppay.Models.GroupAccount;
 import com.dylankilbride.grouppay.Models.VirtualCard;
 import com.dylankilbride.grouppay.Repositories.GroupAccountRepository;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class VirtualCardService {
 
-	List<String> mod10VirtualPans = new ArrayList<>();
+	ArrayList<VirtualCard> cards = new ArrayList<>();
 
 	@Autowired
 	GroupAccountRepository groupAccountRepository;
 
-	public VirtualCardService() {
-		mod10VirtualPans.add("5163698397757686");
-		mod10VirtualPans.add("5266100265870358");
-		mod10VirtualPans.add("5204278358741648");
-		mod10VirtualPans.add("5446952376388560");
-		mod10VirtualPans.add("5514272115318191");
-		mod10VirtualPans.add("5374095440965991");
+	public void getVirtualCardsList() {
+		final String jsonBlobUrl = "https://jsonblob.com/api/jsonBlob/1feadaf0-808d-11e9-8ec2-d357c32e48ca";
+		RestTemplate restTemplate = new RestTemplate();
+		String cards = restTemplate.getForObject(jsonBlobUrl, String.class);
+		parseCardsJson(cards);
 	}
 
-	private String generateRandomCVV() {
-		Random random3Digits = new Random();
-		return String.valueOf((random3Digits.nextInt(999 - 111) + 1) + 100);
+	private void parseCardsJson(String cardsJson) {
+		JSONArray cardsList = new JSONArray(cardsJson);
+		for (int i = 0; i < cardsList.length(); i++) {
+			JSONObject container = cardsList.getJSONObject(i);
+			JSONObject cardDetails = container.getJSONObject("CreditCard");
+			addIndividualCardsToList(new VirtualCard(cardDetails.getString("CardNumber"),
+							cardDetails.getString("Exp"),
+							"Ireland",
+							cardDetails.getString("CVV"),
+							cardDetails.getString("IssuingNetwork")));
+		}
 	}
 
-	private String generateRandomExpiryDate() throws ParseException {
-		LocalDate todaysDate = LocalDate.now();
-		LocalDate maxExpiryDate = LocalDate.of(2025, 12, 30);
-		long now = todaysDate.toEpochDay();
-		long max = maxExpiryDate.toEpochDay();
-		long randomExpiry = ThreadLocalRandom.current().longs(now, max).findAny().getAsLong();
-
-		SimpleDateFormat newFormat = new SimpleDateFormat("MM/yy");
-		SimpleDateFormat dateToParse = new SimpleDateFormat("yyyy-MM-dd");
-
-		return newFormat.format(dateToParse.parse(LocalDate.ofEpochDay(randomExpiry).toString()));
+	private void addIndividualCardsToList(VirtualCard virtualCard) {
+			cards.add(virtualCard);
 	}
 
-	public VirtualCard generateRandomVirtualCardDetails(long groupAccountId) throws ParseException {
-		GroupAccount tempGroup = groupAccountRepository.findByGroupAccountId(groupAccountId);
-
-		String cvv = generateRandomCVV();
-		String expiryDate = generateRandomExpiryDate();
-		String pan = mod10VirtualPans.get(new Random().nextInt(mod10VirtualPans.size()));
-		String country = "Ireland";
-		String issuer = "Mastercard";
-
-		VirtualCard issuedCard = new VirtualCard(pan, expiryDate, country, cvv, issuer);
-		tempGroup.setVirtualCard(issuedCard);
-		groupAccountRepository.save(tempGroup);
-
-		return issuedCard;
+	public void assignVirtualCardToGroup(long groupId) {
+		Random randomCardSelection = new Random();
+		getVirtualCardsList();
+		GroupAccount groupAccount = groupAccountRepository.findByGroupAccountId(groupId);
+		VirtualCard cardToAssign = cards.get(randomCardSelection.nextInt(cards.size()));
+		while (!mod10Check(cardToAssign.getPan())) {
+			cardToAssign = cards.get(randomCardSelection.nextInt(cards.size()));
+		}
+		groupAccount.setVirtualCard(cards.get(randomCardSelection.nextInt(cards.size())));
+		groupAccountRepository.save(groupAccount);
 	}
 
 	public VirtualCard getVirtualCardDetails(String groupAccountId) {
@@ -70,6 +61,20 @@ public class VirtualCardService {
 		return group.getVirtualCard();
 	}
 
-
-
+	private static boolean mod10Check(String cardNumber) {
+		int sum = 0;
+		boolean alternate = false;
+		for (int i = cardNumber.length() - 1; i >= 0; i--) {
+			int n = Integer.parseInt(cardNumber.substring(i, i + 1));
+			if (alternate) {
+				n *= 2;
+				if (n > 9) {
+					n = (n % 10) + 1;
+				}
+			}
+			sum += n;
+			alternate = !alternate;
+		}
+		return (sum % 10 == 0);
+	}
 }

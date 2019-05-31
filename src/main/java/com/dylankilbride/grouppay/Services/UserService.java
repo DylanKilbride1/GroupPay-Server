@@ -1,6 +1,5 @@
 package com.dylankilbride.grouppay.Services;
 
-import com.dylankilbride.grouppay.Models.PaymentDetails;
 import com.dylankilbride.grouppay.Models.ProfileImage;
 import com.dylankilbride.grouppay.Models.User;
 import com.dylankilbride.grouppay.Repositories.ProfileImageRepository;
@@ -8,7 +7,6 @@ import com.dylankilbride.grouppay.Repositories.UserRepository;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
 import com.stripe.exception.*;
-import com.stripe.model.Card;
 import com.stripe.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -57,9 +54,12 @@ public class UserService {
 		if (userRepository.existsByEmailAddress(loginDetails.get("email"))
 						&& userRepository.existsByPassword(loginDetails.get("password"))) {
 			User user = userRepository.findUsersByEmailAddress(loginDetails.get("email"));
-			if((loginDetails.get("isVerified").equals("TRUE")) && (!user.getIsUserVerified().equals("TRUE"))) {
-				user.setIsUserVerified("TRUE");
-				userRepository.save(user);
+			String isVerified = loginDetails.get("isVerified");
+			if (isVerified != null) {
+				if((loginDetails.get("isVerified").equals("TRUE")) && (!user.getIsUserVerified().equals("TRUE"))) {
+					user.setIsUserVerified("TRUE");
+					userRepository.save(user);
+				}
 			}
 			resultMap.put("result", "1");
 			resultMap.put("userId", Long.toString(user.getId()));
@@ -241,4 +241,11 @@ public class UserService {
 		userRepository.save(userToModify);
 		return new ResponseEntity(HttpStatus.OK);
 	}
+
+//	public ResponseEntity updateUsersVerificationStatus(String email, String status) {
+//		User userToModify = userRepository.findUsersByEmailAddress(email);
+//		userToModify.setIsUserVerified(status);
+//		userRepository.save(userToModify);
+//		return new ResponseEntity(HttpStatus.OK);
+//	}
 }

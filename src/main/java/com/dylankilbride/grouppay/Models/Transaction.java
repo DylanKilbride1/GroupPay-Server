@@ -27,13 +27,17 @@ public class Transaction {
 	@Column(name = "payment_date_time")
 	private String paymentDateAndTime;
 
-	@ManyToOne
-	@JoinColumn(name = "group_id")
-	private GroupAccount groupAccount;
+	@Column(name = "group_id")
+	private long groupId;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+	@Column(name = "user_id")
+	private long userId;
+
+	@Column(name = "transaction_owner")
+	private String transactionOwner;
+
+	@Column(name = "group_name")
+	private String groupName;
 
 	@ManyToOne
 	@JoinColumn(name = "bank_account")
@@ -45,11 +49,13 @@ public class Transaction {
 		this.paymentDateAndTime = paymentDateAndTime;
 	}
 
-	public Transaction(BigDecimal amountPaid, BigDecimal fee, String paymentType, String paymentDateAndTime) {
+	public Transaction(BigDecimal amountPaid, BigDecimal fee, String paymentType, String paymentDateAndTime, String transactionOwner, String groupName) {
 		this.amountPaidToGroup = amountPaid;
 		this.paymentType = paymentType;
 		this.paymentDateAndTime = paymentDateAndTime;
 		this.transactionFee = fee;
+		this.transactionOwner = transactionOwner;
+		this.groupName = groupName;
 	}
 
 	public Transaction(){
@@ -86,20 +92,36 @@ public class Transaction {
 		this.paymentDateAndTime = paymentDateAndTime;
 	}
 
-	public void setGroupAccount(GroupAccount groupAccount) {
-		this.groupAccount = groupAccount;
+	public long getGroupId() {
+		return groupId;
 	}
 
-	public GroupAccount getGroupAccount() {
-		return groupAccount;
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public long getUserId() {
+		return userId;
 	}
 
-	public User getUser() {
-		return user;
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public String getTransactionOwner() {
+		return transactionOwner;
+	}
+
+	public void setTransactionOwner(String transactionOwner) {
+		this.transactionOwner = transactionOwner;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
 	}
 
 	public void setBankAccount(BankAccount bankAccount) {

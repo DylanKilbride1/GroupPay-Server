@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,18 +27,20 @@ public class TransactionService {
 		Transaction newIncomingTransactionPaymentRecord = new Transaction(convertDoubleToBigDecimal(amountForGroup),
 						calculateGroupPayFees(convertDoubleToBigDecimal(amountForGroup), convertDoubleToBigDecimal(amountToDebit)),
 						"Incoming",
-						getFormattedPaymentDateAndTime(Calendar.getInstance()));
-		newIncomingTransactionPaymentRecord.setUser(userRepository.findUsersById(Long.valueOf(userId)));
-		newIncomingTransactionPaymentRecord.setGroupAccount(groupAccountRepository.findByGroupAccountId(Long.valueOf(groupId)));
+						getFormattedPaymentDateAndTime(Calendar.getInstance()),
+						userRepository.findUsersById(Long.valueOf(userId)).getFullName(),
+						groupAccountRepository.findByGroupAccountId(Long.valueOf(groupId)).getAccountName());
+		newIncomingTransactionPaymentRecord.setUserId(Long.valueOf(userId));
+		newIncomingTransactionPaymentRecord.setGroupId(Long.valueOf(groupId));
 		transactionRepository.save(newIncomingTransactionPaymentRecord);
 	}
 
 	public List<Transaction> getTransactionsForGroupAccount(long groupAccountId){
-		return transactionRepository.findTransactionByGroupAccount(groupAccountRepository.findByGroupAccountId(groupAccountId));
+		return transactionRepository.findTransactionByGroupId(groupAccountId);
 	}
 
 	public List<Transaction> getUserTransactionHistory(long userId) {
-		return transactionRepository.findTransactionByUser(userRepository.findUsersById(userId));
+		return transactionRepository.findTransactionByUserId(userId);
 	}
 
 	private BigDecimal convertDoubleToBigDecimal(double amount){

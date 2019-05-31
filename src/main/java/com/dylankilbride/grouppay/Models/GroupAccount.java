@@ -30,9 +30,6 @@ public class GroupAccount {
 	@Column(name = "amount_paid")
 	private BigDecimal totalAmountPaid = new BigDecimal("0");
 
-	@OneToMany(mappedBy = "groupAccount")
-	private Set<Transaction> transaction;
-
 	@OneToOne(fetch = FetchType.EAGER,
 					cascade = CascadeType.ALL)
 	@JoinColumn(name = "group_image")

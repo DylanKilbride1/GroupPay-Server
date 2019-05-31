@@ -33,7 +33,8 @@ public class GroupAccountService {
 		groupAccount.setGroupImage(new GroupImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_group_icon.png"));
 		groupAccountRepository.save(groupAccount);
 		groupAccountRepository.addUsersToGroupAccount(groupAccount.getGroupAccountId(), groupAdmin.getId());
-		virtualCardService.generateRandomVirtualCardDetails(groupAccount.getGroupAccountId());
+		virtualCardService.getVirtualCardsList();
+		virtualCardService.assignVirtualCardToGroup(groupAccount.getGroupAccountId());
 		return groupAccount;
 	}
 

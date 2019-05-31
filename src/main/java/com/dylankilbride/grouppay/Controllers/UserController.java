@@ -5,10 +5,8 @@ import com.dylankilbride.grouppay.Repositories.UserRepository;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
 import com.dylankilbride.grouppay.Services.S3ImageManagerService;
-import com.dylankilbride.grouppay.Services.UserService;
-import com.google.gson.JsonObject;
+import com.dylankilbride.grouppay.Services.UserService;6
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -114,4 +112,11 @@ public class UserController {
 	                                             @RequestBody Map<String, String> deviceToken){
 		return userService.updateDeviceToken(oldToken, deviceToken.get("newToken"));
 	}
+
+//	@RequestMapping(value = "user/user/updateVerificationStatus",
+//					method = RequestMethod.PATCH)
+//	public ResponseEntity updateUsersVerificationStatus(@RequestBody Map<String, String> verificationStatus){
+//		return userService.updateUsersVerificationStatus(verificationStatus.get("userEmail"),
+//						verificationStatus.get("isVerified"));
+//	}
 }

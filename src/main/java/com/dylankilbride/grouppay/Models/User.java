@@ -1,12 +1,10 @@
 package com.dylankilbride.grouppay.Models;
 
-import com.stripe.model.Customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Table(name = "User", schema = "grouppay")
 
@@ -38,11 +36,6 @@ public class User {
 	cascade = CascadeType.ALL)
 	@JoinColumn(name = "profile_image")
 	private ProfileImage profileImage;
-
-	@OneToMany(fetch = FetchType.EAGER,
-	cascade = CascadeType.ALL,
-	mappedBy = "user")
-	private Set<Transaction> transaction;
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "groupAccount_users",
@@ -171,5 +164,9 @@ public class User {
 
 	public void setIsUserVerified(String isUserVerified) {
 		this.isUserVerified = isUserVerified;
+	}
+
+	public String getFullName() {
+		return firstName + " " + lastName;
 	}
 }
