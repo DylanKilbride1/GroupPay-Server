@@ -5,7 +5,7 @@ import com.dylankilbride.grouppay.Repositories.UserRepository;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
 import com.dylankilbride.grouppay.Services.S3ImageManagerService;
-import com.dylankilbride.grouppay.Services.UserService;6
+import com.dylankilbride.grouppay.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
