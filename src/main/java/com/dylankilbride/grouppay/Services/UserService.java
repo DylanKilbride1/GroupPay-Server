@@ -6,9 +6,11 @@ import com.dylankilbride.grouppay.Repositories.ProfileImageRepository;
 import com.dylankilbride.grouppay.Repositories.UserRepository;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
+import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -216,7 +218,7 @@ public class UserService {
 			if(user.getStripeCustomerId().equals("")) {
 				return "0";
 			} else {
-				Map<String, Object> cardParams = new HashMap<String, Object>();
+				Map<String, Object> cardParams = new HashMap<>();
 				cardParams.put("limit", user.getNumberOfPaymentMethods());
 				cardParams.put("object", "card");
 				return Customer.retrieve(user.getStripeCustomerId()).getSources().list(cardParams).toJson();
