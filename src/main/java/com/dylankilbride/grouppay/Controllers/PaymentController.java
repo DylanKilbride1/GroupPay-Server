@@ -28,4 +28,13 @@ public class PaymentController {
 	public ResponseEntity savePaymentCardDetails(@RequestBody StripeCharge customerDetails) {
 		return paymentService.savePaymentDetails(customerDetails);
 	}
+
+	@RequestMapping(value = "/chargeSavedCard",
+					method = RequestMethod.POST,
+					consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseEntity chargeSavedCard(@RequestBody StripeCharge chargeDetails) {
+		return paymentService.chargeSavedPaymentCard(chargeDetails);
+	}
+
 }

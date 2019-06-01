@@ -38,9 +38,17 @@ public class PaymentService {
 	public ResponseEntity makeOneTimePaymentCharge(StripeCharge chargeDetails) {
 		try {
 			Map<String, Object> chargeParams = new HashMap<>();
-			chargeParams.put("amount", (int) (chargeDetails.getAmountInclFees() * 100));
-			chargeParams.put("currency", "eur");
-			chargeParams.put("source", chargeDetails.getTokenId());
+
+			if (chargeDetails.getTokenId() == null) {
+				chargeParams.put("amount", (int) (chargeDetails.getAmountInclFees() * 100));
+				chargeParams.put("currency", "eur");
+				chargeParams.put("source", chargeDetails.getCardId());
+				chargeParams.put("customer", getUserById(Long.valueOf(chargeDetails.getUserId())).getStripeCustomerId());
+			} else {
+				chargeParams.put("amount", (int) (chargeDetails.getAmountInclFees() * 100));
+				chargeParams.put("currency", "eur");
+				chargeParams.put("source", chargeDetails.getTokenId());
+			}
 
 			Charge.create(chargeParams);
 			createTransactionRecord(chargeDetails);
@@ -166,6 +174,44 @@ public class PaymentService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	public ResponseEntity chargeSavedPaymentCard(StripeCharge chargeDetails) {
+		try {
+			Map<String, Object> chargeParams = new HashMap<>();
+			chargeParams.put("amount", (int) (chargeDetails.getAmountInclFees() * 100));
+			chargeParams.put("currency", "eur");
+			chargeParams.put("source", chargeDetails.getCardId());
+			chargeParams.put("customer", getUserById(Long.valueOf(chargeDetails.getUserId())).getStripeCustomerId());
+
+			Charge.create(chargeParams);
+
+			createTransactionRecord(chargeDetails);
+			updateGroupPaymentStatus(chargeDetails);
+
+			return new ResponseEntity(HttpStatus.OK);
+
+		} catch (APIConnectionException e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		} catch (InvalidRequestException e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		} catch (APIException e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		} catch (CardException e) {
+			e.printStackTrace();
+			e.getCode();
+			e.getMessage();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity(HttpStatus.BAD_REQUEST);
 		}
 	}
 
