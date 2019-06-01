@@ -6,6 +6,7 @@ import com.dylankilbride.grouppay.Repositories.ProfileImageRepository;
 import com.dylankilbride.grouppay.Repositories.UserRepository;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
+import com.dylankilbride.grouppay.Security.PasswordHashingConfig;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
@@ -24,15 +25,24 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+
 	@Autowired
 	private ProfileImageRepository profileImageRepository;
+
 	@Autowired
 	private S3ImageManagerService s3ImageManagerService;
+
+	@Autowired
+	private PasswordHashingConfig encoder;
+
 	private String noProfileImage = "https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png";
 	private UsersProfileDetails returnUser;
 
 	public Map<String, String> checkIfUserAlreadyExists(Map<String, String> user) {
 		Map<String, String> resultMap = new HashMap<>();
+
+		String password = user.get("password");
+		String hashedPassword = encoder.passwordEncoder().encode(password);
 		if (userRepository.existsByEmailAddress(user.get("email_address"))) {
 			resultMap.put("result", "error");
 			return resultMap;
@@ -40,7 +50,7 @@ public class UserService {
 			User userToBeRegistered = new User(user.get("first_name"),
 							user.get("last_name"),
 							user.get("email_address"),
-							user.get("password"),
+							hashedPassword,
 							user.get("mobile_number"),
 							user.get("device_token"));
 			userToBeRegistered.setProfileImage(new ProfileImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png"));
@@ -52,9 +62,10 @@ public class UserService {
 	}
 
 	public Map<String, String> validateUser(Map<String, String> loginDetails) {
+		String password = loginDetails.get("password");
 		Map<String, String> resultMap = new HashMap<>();
 		if (userRepository.existsByEmailAddress(loginDetails.get("email"))
-						&& userRepository.existsByPassword(loginDetails.get("password"))) {
+						&& encoder.passwordEncoder().matches(password, userRepository.findUsersByEmailAddress(loginDetails.get("email")).getPassword())) {
 			User user = userRepository.findUsersByEmailAddress(loginDetails.get("email"));
 			String isVerified = loginDetails.get("isVerified");
 			if (isVerified != null) {
