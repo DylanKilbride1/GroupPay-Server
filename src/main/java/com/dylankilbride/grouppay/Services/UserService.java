@@ -7,11 +7,9 @@ import com.dylankilbride.grouppay.Repositories.UserRepository;
 import com.dylankilbride.grouppay.ReturnObjects.ImageUploadResponse;
 import com.dylankilbride.grouppay.ReturnObjects.UsersProfileDetails;
 import com.dylankilbride.grouppay.Security.PasswordHashingConfig;
-import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,16 +40,18 @@ public class UserService {
 		Map<String, String> resultMap = new HashMap<>();
 
 		String password = user.get("password");
+		String firstName = user.get("first_name").trim();
+		String lastName = user.get("last_name").trim();
 		String hashedPassword = encoder.passwordEncoder().encode(password);
 		if (userRepository.existsByEmailAddress(user.get("email_address"))) {
 			resultMap.put("result", "error");
 			return resultMap;
 		} else {
-			User userToBeRegistered = new User(user.get("first_name"),
-							user.get("last_name"),
-							user.get("email_address"),
+			User userToBeRegistered = new User(firstName.substring(0,1).toUpperCase() + firstName.substring(1).toLowerCase(),
+							lastName.substring(0,1).toUpperCase() + lastName.substring(1).toLowerCase(),
+							user.get("email_address").trim().toLowerCase(),
 							hashedPassword,
-							user.get("mobile_number"),
+							user.get("mobile_number").trim(),
 							user.get("device_token"));
 			userToBeRegistered.setProfileImage(new ProfileImage("https://s3-eu-west-1.amazonaws.com/grouppay-image-bucket/no_profile_photo.png"));
 			userToBeRegistered.setStripeCustomerId("");
@@ -118,7 +118,7 @@ public class UserService {
 		long id = Long.valueOf(uid);
 		String imageUrl;
 		User foundUser = userRepository.findUsersById(id);
-		foundUser.setEmailAddress(user.getEmailAddress());
+		foundUser.setEmailAddress(user.getEmailAddress().toLowerCase());
 		userRepository.save(foundUser);
 		try {
 			imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
@@ -170,8 +170,12 @@ public class UserService {
 		long id = Long.valueOf(uid);
 		String imageUrl;
 		User foundUser = userRepository.findUsersById(id);
-		foundUser.setFirstName(user.getFirstName());
-		foundUser.setLastName(user.getLastName());
+		if (!user.getFirstName().isEmpty()) {
+			foundUser.setFirstName(user.getFirstName());
+		}
+		if (!user.getLastName().isEmpty()) {
+			foundUser.setLastName(user.getLastName());
+		}
 		userRepository.save(foundUser);
 		try {
 				imageUrl = getProfileImageUrl(user.getProfileImage().getImageId());
